@@ -8,6 +8,7 @@ from app.security.jwks import jwks_client
 
 from app.routers.usuarios import usuarios
 from app.routers.usuarios import estadousuarios
+from app.routers.usuarios import reestablecercontraseña
 
 app = FastAPI(
     title=settings.APP_NAME,
@@ -41,4 +42,7 @@ app.include_router(
 )
 app.include_router(
     estadousuarios.router
+)
+app.include_router(
+    reestablecercontraseña.router
 )
