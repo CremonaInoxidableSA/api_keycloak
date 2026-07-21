@@ -1,13 +1,13 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 
-from fastapi import Depends
 from app.schemas.authenticated_user import AuthenticatedUser
 from app.security.dependencies import get_current_user
 
 from app.core.config import settings
 from app.security.jwks import jwks_client
 
-from app.routers import users
+from app.routers.usuarios import usuarios
+from app.routers.usuarios import estadousuarios
 
 app = FastAPI(
     title=settings.APP_NAME,
@@ -37,6 +37,8 @@ async def health():
     }
 
 app.include_router(
-    users.router
-    
+    usuarios.router
+)
+app.include_router(
+    estadousuarios.router
 )
