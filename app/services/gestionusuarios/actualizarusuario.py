@@ -35,50 +35,42 @@ async def get_admin_token():
 
         return response.json()["access_token"]
 
-async def reset_user_password(
+
+async def update_user_keycloak(
     user_id: str,
-    new_password: str
+    data
 ):
 
     token = await get_admin_token()
 
     url = (
         f"{get_admin_base_url()}"
-        f"/users/{user_id}/reset-password"
+        f"/users/{user_id}"
     )
 
-    body = {
-        "type": "password",
-        "value": new_password,
-        "temporary": False
-    }
+    body = {}
+
+    email = getattr(data, "email", None)
+    if email is not None:
+        body["email"] = email
+
+    nombre = getattr(data, "nombre", None)
+    if nombre is not None:
+        body["firstName"] = nombre
+
+    apellido = getattr(data, "apellido", None)
+    if apellido is not None:
+        body["lastName"] = apellido
+
+    habilitado = getattr(data, "habilitado", None)
+    if habilitado is not None:
+        body["enabled"] = habilitado
 
     async with httpx.AsyncClient() as client:
 
         response = await client.put(
             url,
             json=body,
-            headers={
-                "Authorization": f"Bearer {token}"
-            }
-        )
-
-        response.raise_for_status()
-
-    url_user = (
-        f"{get_admin_base_url()}"
-        f"/users/{user_id}"
-    )
-
-    body_actions = {
-        "requiredActions": ["UPDATE_PASSWORD"]
-    }
-
-    async with httpx.AsyncClient() as client:
-
-        response = await client.put(
-            url_user,
-            json=body_actions,
             headers={
                 "Authorization": f"Bearer {token}"
             }

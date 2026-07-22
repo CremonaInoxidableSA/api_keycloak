@@ -3,7 +3,11 @@ from fastapi import APIRouter, HTTPException, Depends
 from app.schemas.user import CreateUserRequest
 from app.schemas.edit_user import UpdateUserRequest
 
-from app.services.keycloak_admin import create_user, update_user_keycloak, get_user
+from app.services.keycloak_admin import get_user
+
+from app.services.gestionusuarios.actualizarusuario import update_user_keycloak
+
+from app.services.gestionusuarios.crearusuario import crear_usuario
 
 from app.security.permissions import require_role
 from app.schemas.authenticated_user import AuthenticatedUser
@@ -13,7 +17,6 @@ router = APIRouter(
     prefix="/usuarios",
     tags=["Usuarios"]
 )
-
 
 @router.post(
     "/crear-usuario",
@@ -25,7 +28,7 @@ async def create_new_user(
 
     try:
 
-        user_id = await create_user(
+        user_id = await crear_usuario(
             username=data.email,
             email=data.email,
             first_name=data.nombre,

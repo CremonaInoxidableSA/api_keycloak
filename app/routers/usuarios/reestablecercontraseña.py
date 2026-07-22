@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, Depends
 
 from app.schemas.reset_password import ResetPasswordRequest
 
-from app.services.keycloak_admin import reset_user_password
+from app.services.gestionusuarios.reestablecercontraseña import reset_user_password
 
 from app.security.permissions import require_role
 from app.schemas.authenticated_user import AuthenticatedUser

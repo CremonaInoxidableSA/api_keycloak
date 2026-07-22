@@ -2,7 +2,9 @@ from fastapi import APIRouter, HTTPException, Depends
 
 from app.schemas.estado_user import EstadoUserRequest
 
-from app.services.keycloak_admin import estado_user_keycloak, get_user
+from app.services.keycloak_admin import get_user
+
+from app.services.gestionusuarios.estadousuario import estado_user_keycloak
 
 from app.security.permissions import require_role
 from app.schemas.authenticated_user import AuthenticatedUser

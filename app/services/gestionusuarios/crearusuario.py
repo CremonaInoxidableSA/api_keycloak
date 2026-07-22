@@ -35,27 +35,53 @@ async def get_admin_token():
 
         return response.json()["access_token"]
 
-async def reset_user_password(
-    user_id: str,
-    new_password: str
+
+async def crear_usuario(
+    username: str,
+    email: str,
+    first_name: str,
+    last_name: str,
+    password: str,
+    realm_roles: list[str] | None = None
 ):
 
     token = await get_admin_token()
 
     url = (
         f"{get_admin_base_url()}"
-        f"/users/{user_id}/reset-password"
+        "/users"
     )
 
     body = {
-        "type": "password",
-        "value": new_password,
-        "temporary": False
+
+        "username": username,
+
+        "email": email,
+
+        "firstName": first_name,
+
+        "lastName": last_name,
+
+        "enabled": True,
+
+        "emailVerified": False,
+
+        "requiredActions": [
+            "UPDATE_PASSWORD"
+        ],
+
+        "credentials": [
+            {
+                "type": "password",
+                "value": password,
+                "temporary": True
+            }
+        ]
     }
 
     async with httpx.AsyncClient() as client:
 
-        response = await client.put(
+        response = await client.post(
             url,
             json=body,
             headers={
@@ -65,23 +91,14 @@ async def reset_user_password(
 
         response.raise_for_status()
 
-    url_user = (
-        f"{get_admin_base_url()}"
-        f"/users/{user_id}"
-    )
+        location = response.headers["Location"]
 
-    body_actions = {
-        "requiredActions": ["UPDATE_PASSWORD"]
-    }
+    user_id = location.split("/")[-1]
 
-    async with httpx.AsyncClient() as client:
-
-        response = await client.put(
-            url_user,
-            json=body_actions,
-            headers={
-                "Authorization": f"Bearer {token}"
-            }
+    if realm_roles:
+        await assign_realm_roles(
+            user_id=user_id,
+            role_names=realm_roles
         )
 
-        response.raise_for_status()
+    return user_id
