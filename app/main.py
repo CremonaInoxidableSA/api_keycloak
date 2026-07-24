@@ -20,13 +20,13 @@ import os
 from dotenv import load_dotenv
 
 from app.models.usuarios import Usuarios
-from app.models.roles import Roles
+from app.models.grupos import Grupos
 from app.models.modulos import Modulos
 from app.models.submodulos import Submodulos
 from app.models.permisos import Permisos
-from app.models.usuarios_roles import usuarios_roles
-from app.models.rol_modulos import rol_modulos
-from app.models.rol_submodulos import rol_submodulos
+from app.models.usuarios_grupos import usuarios_grupos
+from app.models.grupos_modulos import grupos_modulos
+from app.models.grupos_submodulos import grupos_submodulos
 
 load_dotenv()
 

@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String, Boolean
 from sqlalchemy.orm import relationship
 from app.config.db import Base
-from .usuarios_roles import usuarios_roles
+from .usuarios_grupos import usuarios_grupos
 
 
 class Usuarios(Base):
@@ -12,10 +12,9 @@ class Usuarios(Base):
     username = Column(String(100), nullable=True, unique=True, index=True)
     nombre = Column(String(100), nullable=False)
     apellido = Column(String(100), nullable=False)
-    password_hash = Column(String(255), nullable=True)
     habilitado = Column(Boolean, nullable=False, default=True)
     legajo = Column(Integer, nullable=True, unique=True)
     dni = Column(Integer, nullable=True)
     cambiar_contra = Column(Boolean, nullable=False, default=False)
 
-    roles = relationship("Roles", secondary=usuarios_roles, back_populates="usuarios")
+    grupos = relationship("Grupos", secondary=usuarios_grupos, back_populates="usuarios")

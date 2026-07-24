@@ -50,7 +50,7 @@ async def create_new_user(
         )
 
 @router.put(
-    "/{user_id}",
+    "/editar-usuario",
     dependencies=[Depends(require_role("EDITAR_USUARIOS"))]
 )
 async def update_user(

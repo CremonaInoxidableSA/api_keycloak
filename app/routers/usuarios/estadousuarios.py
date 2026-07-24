@@ -16,7 +16,7 @@ router = APIRouter(
 )
 
 @router.put(
-    "/{user_id}/habilitar",
+    "/habilitar-usuarios",
     dependencies=[Depends(require_role("HABILITAR_USUARIOS"))]
 )
 async def enable_user(
@@ -54,7 +54,7 @@ async def enable_user(
 
 
 @router.put(
-    "/{user_id}/deshabilitar",
+    "/deshabilitar-usuarios",
     dependencies=[Depends(require_role("DESHABILITAR_USUARIOS"))]
 )
 async def disable_user(

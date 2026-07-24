@@ -1,39 +1,9 @@
 import httpx
 
-from app.core.config import settings
-
-def get_admin_base_url():
-    return (
-        f"{settings.KEYCLOAK_URL}"
-        f"/admin/realms/"
-        f"{settings.KEYCLOAK_REALM}"
-    )
-
-
-async def get_admin_token():
-
-    url = (
-        f"{settings.KEYCLOAK_URL}"
-        f"/realms/{settings.KEYCLOAK_REALM}"
-        "/protocol/openid-connect/token"
-    )
-
-    data = {
-        "grant_type": "client_credentials",
-        "client_id": settings.KEYCLOAK_ADMIN_CLIENT_ID,
-        "client_secret": settings.KEYCLOAK_ADMIN_SECRET,
-    }
-
-    async with httpx.AsyncClient() as client:
-
-        response = await client.post(
-            url,
-            data=data
-        )
-
-        response.raise_for_status()
-
-        return response.json()["access_token"]
+from app.services.keycloak_admin import (
+    get_admin_base_url,
+    get_admin_token
+)
 
 
 async def update_user_keycloak(
