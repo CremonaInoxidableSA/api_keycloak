@@ -27,27 +27,37 @@ async def create_new_user(
 ):
 
     try:
-
-        user_id = await crear_usuario(
+        resultado = await crear_usuario(
             username=data.email,
             email=data.email,
             first_name=data.nombre,
             last_name=data.apellido,
-            password=data.password
+            password=data.password,
+            habilitado=data.habilitado,
+            dni=data.dni,
+            legajo=data.legajo
         )
 
-        return {
-            "message": "Usuario creado correctamente",
-            "id": user_id,
-            "email": data.email
-        }
+        return resultado
 
     except Exception as e:
-
-        raise HTTPException(
-            status_code=400,
-            detail=str(e)
-        )
+        error_str = str(e)
+        
+        if "Falla en creación general" in error_str:
+            raise HTTPException(
+                status_code=400,
+                detail=error_str
+            )
+        elif "Falla en creación en base de datos" in error_str:
+            raise HTTPException(
+                status_code=400,
+                detail=error_str
+            )
+        else:
+            raise HTTPException(
+                status_code=400,
+                detail=str(e)
+            )
 
 @router.put(
     "/editar-usuario",

@@ -20,13 +20,8 @@ import os
 from dotenv import load_dotenv
 
 from app.models.usuarios import Usuarios
-from app.models.grupos import Grupos
 from app.models.modulos import Modulos
 from app.models.submodulos import Submodulos
-from app.models.permisos import Permisos
-from app.models.usuarios_grupos import usuarios_grupos
-from app.models.grupos_modulos import grupos_modulos
-from app.models.grupos_submodulos import grupos_submodulos
 
 load_dotenv()
 
@@ -44,14 +39,6 @@ app = FastAPI(
     title=settings.APP_NAME,
     version="1.0.0"
 )
-
-@app.get("/")
-async def root():
-    return {
-        "message": "API funcionando correctamente",
-        "realm": settings.KEYCLOAK_REALM,
-        "client": settings.KEYCLOAK_LOGIN_CLIENT_ID
-    }
 
 @app.get("/private")
 async def private(

@@ -10,3 +10,9 @@ class CreateUserRequest(BaseModel):
     apellido: str
 
     password: str
+
+    dni: int | None = None
+
+    legajo: int | None = None
+
+    habilitado: bool = True

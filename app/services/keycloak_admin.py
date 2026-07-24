@@ -143,3 +143,30 @@ async def assign_realm_roles(
         )
 
         response.raise_for_status()
+
+
+async def delete_user(user_id: str):
+    """
+    Elimina un usuario de Keycloak.
+    
+    Args:
+        user_id: ID del usuario en Keycloak
+    """
+
+    token = await get_admin_token()
+
+    url = (
+        f"{get_admin_base_url()}"
+        f"/users/{user_id}"
+    )
+
+    async with httpx.AsyncClient() as client:
+
+        response = await client.delete(
+            url,
+            headers={
+                "Authorization": f"Bearer {token}"
+            }
+        )
+
+        response.raise_for_status()
