@@ -2,10 +2,12 @@ from fastapi import FastAPI, Depends
 
 from app.schemas.authenticated_user import AuthenticatedUser
 from app.security.dependencies import get_current_user
+from app.services.gestionpersonal.detalles import procesar_detalles
 
 from app.core.config import settings
 from app.security.jwks import jwks_client
 
+from app.routers.usuarios import detalles
 from app.routers.usuarios import usuarios
 from app.routers.usuarios import estadousuarios
 from app.routers.usuarios import reestablecercontraseña
@@ -42,12 +44,7 @@ app = FastAPI(
     version="1.0.0"
 )
 
-@app.get("/private")
-async def private(
-    user: AuthenticatedUser = Depends(get_current_user)
-):
-    return user
-
+app.include_router(detalles.router)
 app.include_router(usuarios.router)
 app.include_router(estadousuarios.router)
 app.include_router(reestablecercontraseña.router)
