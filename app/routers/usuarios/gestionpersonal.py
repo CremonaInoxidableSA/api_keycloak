@@ -1,28 +1,28 @@
 from fastapi import APIRouter, HTTPException, Depends
 
-from app.schemas.reset_password import ResetPasswordRequest
-
-from app.services.gestionusuarios.reestablecercontraseña import reset_user_password
-
-from app.security.permissions import require_role
+from app.schemas.change_password import ChangePasswordRequest
 from app.schemas.authenticated_user import AuthenticatedUser
 from app.security.dependencies import get_current_user
 
+from app.services.gestionpersonal.cambiarcontraseña import cambiar_contraseña_usuario
+
+
 router = APIRouter(
-    prefix="/usuarios",
-    tags=["Usuarios"]
+    prefix="/personal",
+    tags=["Usuarios gestion personal"]
 )
 
 
 @router.put(
-    "/reset-password",
-    dependencies=[Depends(require_role("CONTRASEÑA_USUARIOS"))]
+    "/change-password"
 )
-async def reset_password(
-    user_id: str,
-    data: ResetPasswordRequest,
+async def change_password(
+    data: ChangePasswordRequest,
     current_user: AuthenticatedUser = Depends(get_current_user)
 ):
+    """
+    Permite al usuario cambiar su propia contraseña.
+    """
 
     try:
         if data.password != data.password_confirmation:
@@ -37,15 +37,12 @@ async def reset_password(
                 detail="La contraseña debe tener al menos 8 caracteres"
             )
 
-        await reset_user_password(
-            user_id=user_id,
+        resultado = await cambiar_contraseña_usuario(
+            user_id=current_user.id,
             new_password=data.password
         )
 
-        return {
-            "message": "Contraseña reestablecida correctamente",
-            "user_id": user_id
-        }
+        return resultado
 
     except HTTPException:
         raise

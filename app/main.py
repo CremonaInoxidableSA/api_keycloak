@@ -9,6 +9,7 @@ from app.security.jwks import jwks_client
 from app.routers.usuarios import usuarios
 from app.routers.usuarios import estadousuarios
 from app.routers.usuarios import reestablecercontraseña
+from app.routers.usuarios import gestionpersonal
 
 #Cosas MYSQL
 from sqlalchemy import create_engine, text 
@@ -49,3 +50,4 @@ async def private(
 app.include_router(usuarios.router)
 app.include_router(estadousuarios.router)
 app.include_router(reestablecercontraseña.router)
+app.include_router(gestionpersonal.router)
