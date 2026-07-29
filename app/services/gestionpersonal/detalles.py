@@ -4,12 +4,15 @@ from app.services.keycloak_admin import (
     get_admin_base_url,
     get_admin_token
 )
+from app.config.db import SessionLocal
+from app.models.usuarios import Usuarios
 
 async def procesar_detalles(user: AuthenticatedUser):
     """
     Procesa los datos del usuario autenticado para retornar
     información estructurada sobre módulos, submódulos y permisos.
-    También obtiene los grupos a los cuales pertenece el usuario.
+    También obtiene los grupos a los cuales pertenece el usuario
+    y sus datos de legajo y DNI de la base de datos.
     
     Args:
         user: Usuario autenticado con sus roles
@@ -61,12 +64,28 @@ async def procesar_detalles(user: AuthenticatedUser):
     except Exception as e:
         grupos = []
     
+    legajo = 0
+    dni = 0
+    
+    try:
+        db = SessionLocal()
+        usuario_db = db.query(Usuarios).filter(Usuarios.id == user.id).first()
+        db.close()
+        
+        if usuario_db:
+            legajo = usuario_db.legajo if usuario_db.legajo is not None else 0
+            dni = usuario_db.dni if usuario_db.dni is not None else 0
+    
+    except Exception as e:
+        legajo = 0
+        dni = 0
+    
     return {
         "email": user.email,
         "nombre": user.first_name,
         "apellido": user.last_name,
-        "legajo": 1231512,
-        "dni": 95218923,
+        "legajo": legajo,
+        "dni": dni,
         "grupos": grupos,
         "modulos": modulos,
         "submodulos": submodulos,
