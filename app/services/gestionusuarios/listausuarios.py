@@ -89,7 +89,6 @@ async def obtener_lista_usuarios(numero_pagina: int = 1, filtro: str = None):
             
             usuario_procesado = {
                 "id": usuario.get("id"),
-                "username": usuario.get("username"),
                 "email": usuario.get("email"),
                 "nombre": usuario.get("firstName"),
                 "apellido": usuario.get("lastName"),
