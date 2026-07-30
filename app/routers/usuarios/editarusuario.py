@@ -29,7 +29,6 @@ async def editar_usuario(
             legajo=data.legajo,
             dni=data.dni,
             grupos=data.grupos,
-            habilitado=data.habilitado,
             cambiar_contraseña=data.cambiar_contraseña
         )
         

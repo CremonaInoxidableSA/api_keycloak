@@ -16,34 +16,14 @@ async def editar_usuario(
     legajo: Optional[int] = None,
     dni: Optional[int] = None,
     grupos: Optional[List[str]] = None,
-    habilitado: Optional[bool] = None,
     cambiar_contraseña: Optional[bool] = None
 ):
-    """
-    Edita los datos de un usuario de forma selectiva.
-    Solo actualiza los campos que se proporcionen.
-    
-    Args:
-        user_id: ID del usuario en Keycloak
-        email: Email del usuario
-        nombre: Nombre del usuario
-        apellido: Apellido del usuario
-        legajo: Legajo (solo base de datos)
-        dni: DNI (solo base de datos)
-        grupos: Lista de grupos a asignar
-        habilitado: Habilitar/deshabilitar usuario
-        cambiar_contraseña: Agregar/quitar UPDATE_PASSWORD de requiredActions
-    
-    Returns:
-        Dict con información del usuario actualizado
-    """
     
     token = await get_admin_token()
     headers = {
         "Authorization": f"Bearer {token}"
     }
     
-    # Actualizar datos en Keycloak
     user_url = f"{get_admin_base_url()}/users/{user_id}"
     body = {}
     
@@ -56,9 +36,6 @@ async def editar_usuario(
     if apellido is not None:
         body["lastName"] = apellido
     
-    if habilitado is not None:
-        body["enabled"] = habilitado
-    
     if body:
         async with httpx.AsyncClient() as client:
             response = await client.put(
@@ -68,12 +45,10 @@ async def editar_usuario(
             )
             response.raise_for_status()
     
-    # Actualizar required actions si es necesario
     if cambiar_contraseña is not None:
         required_actions_url = f"{get_admin_base_url()}/users/{user_id}"
         
         async with httpx.AsyncClient() as client:
-            # Obtener usuario actual
             get_response = await client.get(
                 required_actions_url,
                 headers=headers
@@ -88,7 +63,6 @@ async def editar_usuario(
             elif not cambiar_contraseña and "UPDATE_PASSWORD" in required_actions:
                 required_actions.remove("UPDATE_PASSWORD")
             
-            # Actualizar required actions
             update_body = {"requiredActions": required_actions}
             response = await client.put(
                 required_actions_url,
@@ -97,16 +71,13 @@ async def editar_usuario(
             )
             response.raise_for_status()
     
-    # Actualizar grupos si se proporcionan
     if grupos is not None:
-        # Validar que los grupos existen
         grupos_disponibles_list = await obtener_grupos_realm()
         grupos_disponibles_names = {
             g["nombre"]
             for g in grupos_disponibles_list
         }
         
-        # Verificar que todos los grupos solicitados existen
         grupos_invalidos = [
             g for g in grupos
             if g not in grupos_disponibles_names

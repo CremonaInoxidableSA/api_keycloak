@@ -14,7 +14,5 @@ class UpdateUserRequest(BaseModel):
     dni: Optional[int] = None
     
     grupos: Optional[List[str]] = None
-    
-    habilitado: Optional[bool] = None
-    
+        
     cambiar_contraseña: Optional[bool] = None
