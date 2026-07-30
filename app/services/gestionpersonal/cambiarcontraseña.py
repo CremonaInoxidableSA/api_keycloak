@@ -55,7 +55,7 @@ async def cambiar_contraseña_usuario(
 
         return {
             "status": "success",
-            "message": "Contraseña cambiada correctamente"
+            "detail": "Contraseña cambiada correctamente"
         }
 
     except httpx.HTTPStatusError as e:

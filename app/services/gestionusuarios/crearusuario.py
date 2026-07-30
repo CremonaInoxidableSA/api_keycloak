@@ -137,7 +137,7 @@ async def crear_usuario(
             raise Exception(f"Falla en creación en base de datos: {str(db_error)}")
     
     return {
-        "message": "Creación correcta",
+        "detail": "Creación correcta",
         "id": user_id,
         "email": email,
         "dni": dni,

@@ -92,7 +92,7 @@ async def obtener_lista_usuarios(numero_pagina: int = 1, filtro: str = None):
                 "email": usuario.get("email"),
                 "nombre": usuario.get("firstName"),
                 "apellido": usuario.get("lastName"),
-                "enabled": usuario.get("enabled"),
+                "habilitado": usuario.get("enabled"),
                 "grupos": grupos
             }
             

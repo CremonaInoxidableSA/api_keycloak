@@ -1,14 +1,34 @@
 import httpx
-from app.schemas.authenticated_user import AuthenticatedUser
 from app.services.keycloak_admin import (
     get_admin_base_url,
-    get_admin_token
+    get_admin_token,
+    get_user
 )
 from app.config.db import SessionLocal
 from app.models.usuarios import Usuarios
 
-async def procesar_detalles(user: AuthenticatedUser): 
-    roles = user.roles if user.roles else []
+async def procesar_detalles_usuario_por_id(user_id: str):
+    """
+    Obtiene los detalles de un usuario específico por su ID.
+    Retorna información estructurada sobre módulos, submódulos, permisos,
+    grupos, datos de legajo y DNI de la base de datos.
+    
+    Args:
+        user_id: ID del usuario en Keycloak
+    
+    Returns:
+        Dict con información procesada del usuario
+        
+    Raises:
+        Exception: Si el usuario no existe en Keycloak
+    """
+    
+    try:
+        usuario_keycloak = await get_user(user_id)
+    except Exception as e:
+        raise Exception(f"Usuario con ID {user_id} no encontrado en Keycloak")
+    
+    roles = usuario_keycloak.get("realm_roles", [])
     
     modulos = []
     submodulos = []
@@ -22,6 +42,9 @@ async def procesar_detalles(user: AuthenticatedUser):
         elif rol.startswith("PERMISO_"):
             permisos.append(rol)
     
+    required_actions = usuario_keycloak.get("requiredActions", [])
+    cambiar_contraseña = "UPDATE_PASSWORD" in required_actions
+    
     grupos = []
     try:
         token = await get_admin_token()
@@ -32,7 +55,7 @@ async def procesar_detalles(user: AuthenticatedUser):
         
         grupos_url = (
             f"{get_admin_base_url()}"
-            f"/users/{user.id}/groups"
+            f"/users/{user_id}/groups"
         )
         
         async with httpx.AsyncClient() as client:
@@ -56,7 +79,7 @@ async def procesar_detalles(user: AuthenticatedUser):
     
     try:
         db = SessionLocal()
-        usuario_db = db.query(Usuarios).filter(Usuarios.id == user.id).first()
+        usuario_db = db.query(Usuarios).filter(Usuarios.id == user_id).first()
         db.close()
         
         if usuario_db:
@@ -68,13 +91,13 @@ async def procesar_detalles(user: AuthenticatedUser):
         dni = 0
     
     return {
-        "email": user.email,
-        "nombre": user.first_name,
-        "apellido": user.last_name,
+        "id": user_id,
+        "nombre": usuario_keycloak.get("firstName", ""),
+        "apellido": usuario_keycloak.get("lastName", ""),
         "legajo": legajo,
         "dni": dni,
+        "email": usuario_keycloak.get("email", ""),
         "grupos": grupos,
-        "modulos": modulos,
-        "submodulos": submodulos,
-        "permisos": permisos
+        "habilitado": usuario_keycloak.get("enabled", False),
+        "cambiar_contraseña": cambiar_contraseña
     }

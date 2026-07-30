@@ -29,7 +29,7 @@ async def enable_user(
         
         if user_data.get("enabled", False):
             return {
-                "message": "El usuario ya se encuentra habilitado"
+                "detail": "El usuario ya se encuentra habilitado"
             }
         
         from app.schemas.estado_user import EstadoUserRequest as UpdateRequest
@@ -42,7 +42,7 @@ async def enable_user(
         )
 
         return {
-            "message": "Usuario habilitado correctamente",
+            "detail": "Usuario habilitado correctamente",
             "user_id": user_id
         }
 
@@ -67,7 +67,7 @@ async def disable_user(
         
         if not user_data.get("enabled", False):
             return {
-                "message": "El usuario ya se encuentra deshabilitado"
+                "detail": "El usuario ya se encuentra deshabilitado"
             }
         
         realm_roles = user_data.get("realm_roles", [])
@@ -87,7 +87,7 @@ async def disable_user(
         )
 
         return {
-            "message": "Usuario deshabilitado correctamente",
+            "detail": "Usuario deshabilitado correctamente",
             "user_id": user_id
         }
 

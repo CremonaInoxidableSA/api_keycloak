@@ -75,5 +75,5 @@ async def update_user(
     )
 
     return {
-        "message": "Usuario actualizado correctamente"
+        "detail": "Usuario actualizado correctamente"
     }

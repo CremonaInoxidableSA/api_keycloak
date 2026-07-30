@@ -43,7 +43,7 @@ async def reset_password(
         )
 
         return {
-            "message": "Contraseña reestablecida correctamente",
+            "detail": "Contraseña reestablecida correctamente",
             "user_id": user_id
         }
 

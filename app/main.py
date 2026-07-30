@@ -13,6 +13,9 @@ from app.routers.usuarios import estadousuarios
 from app.routers.usuarios import reestablecercontraseña
 from app.routers.usuarios import gestionpersonal
 from app.routers.usuarios import listausuarios
+from app.routers.usuarios import detalleusuario
+from app.routers.usuarios import editarusuario
+from app.routers.permisos import listagrupos
 
 #Cosas MYSQL
 from sqlalchemy import create_engine, text 
@@ -50,3 +53,6 @@ app.include_router(estadousuarios.router)
 app.include_router(reestablecercontraseña.router)
 app.include_router(gestionpersonal.router)
 app.include_router(listausuarios.router)
+app.include_router(detalleusuario.router)
+app.include_router(editarusuario.router)
+app.include_router(listagrupos.router)
