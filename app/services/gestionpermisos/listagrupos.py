@@ -4,39 +4,67 @@ from app.services.keycloak_admin import (
     get_admin_token
 )
 
-async def obtener_grupos_realm():
+async def obtener_grupos_realm(numero_pagina: int = 1, filtro: str = None):
     """
-    Obtiene la lista de grupos del realm que comienzan con "GRUPO_".
+    Obtiene la lista de grupos del realm que comienzan con "GRUPO_" con paginación y filtro.
+    
+    Args:
+        numero_pagina: Número de página (empezando desde 1)
+        filtro: String para filtrar grupos por nombre
     
     Returns:
-        List con los nombres de los grupos disponibles
+        Tupla con (lista de grupos, total de grupos que coinciden)
     """
     
-    token = await get_admin_token()
+    if numero_pagina < 1:
+        numero_pagina = 1
     
-    headers = {
-        "Authorization": f"Bearer {token}"
-    }
+    grupos_por_pagina = 10
+    skip = (numero_pagina - 1) * grupos_por_pagina
     
-    grupos_url = f"{get_admin_base_url()}/groups"
-    
-    async with httpx.AsyncClient() as client:
-        response = await client.get(
-            grupos_url,
-            headers=headers
-        )
+    try:
+        token = await get_admin_token()
         
-        response.raise_for_status()
-    
-    grupos_data = response.json()
-    
-    grupos = [
-        {
-            "id": g["id"],
-            "nombre": g["name"]
+        headers = {
+            "Authorization": f"Bearer {token}"
         }
-        for g in grupos_data
-        if g["name"].startswith("GRUPO_")
-    ]
+        
+        grupos_url = f"{get_admin_base_url()}/groups"
+        
+        async with httpx.AsyncClient() as client:
+            response = await client.get(
+                grupos_url,
+                headers=headers
+            )
+            
+            response.raise_for_status()
+        
+        grupos_data = response.json()
+        
+        grupos_procesados = []
+        
+        for grupo in grupos_data:
+            if not grupo["name"].startswith("GRUPO_"):
+                continue
+            
+            if filtro:
+                nombre = grupo.get("name", "").lower()
+                filtro_lower = filtro.lower()
+                
+                if filtro_lower not in nombre:
+                    continue
+            
+            grupo_procesado = {
+                "nombre": grupo.get("name")
+            }
+            
+            grupos_procesados.append(grupo_procesado)
+        
+        grupos_paginados = grupos_procesados[skip:skip + grupos_por_pagina]
+        
+        return grupos_paginados, len(grupos_procesados)
     
-    return grupos
+    except httpx.HTTPError as e:
+        raise Exception(f"Error al conectar con Keycloak: {str(e)}")
+    except Exception as e:
+        raise Exception(f"Error al obtener lista de grupos: {str(e)}")
