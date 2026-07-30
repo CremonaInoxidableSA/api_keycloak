@@ -1,4 +1,5 @@
 from fastapi import APIRouter, HTTPException, Depends
+import re
 
 from app.schemas.edit_user import UpdateUserRequest
 from app.services.gestionusuarios.editarusuario import editar_usuario as editar_usuario_servicio
@@ -11,6 +12,13 @@ router = APIRouter(
     tags=["Usuarios"]
 )
 
+def validar_email(email: str) -> bool:
+    """
+    Valida que el email tenga un formato correcto.
+    """
+    patron = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+    return re.match(patron, email) is not None
+
 @router.put(
     "/editar",
     dependencies=[Depends(require_role("EDITAR_USUARIOS"))]
@@ -20,6 +28,14 @@ async def editar_usuario(
     data: UpdateUserRequest,
     current_user: AuthenticatedUser = Depends(get_current_user)
 ):
+    # Validar formato de email si se proporciona
+    if data.email is not None and data.email != "":
+        if not validar_email(data.email):
+            raise HTTPException(
+                status_code=400,
+                detail="El formato del correo electrónico es inválido"
+            )
+    
     try:
         resultado = await editar_usuario_servicio(
             user_id=user_id,

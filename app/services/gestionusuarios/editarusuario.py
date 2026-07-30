@@ -72,7 +72,7 @@ async def editar_usuario(
             response.raise_for_status()
     
     if grupos is not None:
-        grupos_disponibles_list = await obtener_grupos_realm()
+        grupos_disponibles_list, _ = await obtener_grupos_realm()
         grupos_disponibles_names = {
             g["nombre"]
             for g in grupos_disponibles_list
