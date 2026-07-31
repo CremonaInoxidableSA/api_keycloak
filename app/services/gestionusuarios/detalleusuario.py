@@ -1,4 +1,5 @@
 import httpx
+import asyncio
 from app.services.keycloak_admin import (
     get_admin_base_url,
     get_admin_token,
@@ -6,6 +7,55 @@ from app.services.keycloak_admin import (
 )
 from app.config.db import SessionLocal
 from app.models.usuarios import Usuarios
+
+async def obtener_grupos_usuario(user_id: str, token: str):
+    """
+    Obtiene los grupos de un usuario específico.
+    """
+    try:
+        headers = {
+            "Authorization": f"Bearer {token}"
+        }
+        
+        grupos_url = f"{get_admin_base_url()}/users/{user_id}/groups"
+        
+        async with httpx.AsyncClient() as client:
+            grupos_response = await client.get(
+                grupos_url,
+                headers=headers
+            )
+            
+            grupos_response.raise_for_status()
+        
+        grupos = [
+            grupo["name"]
+            for grupo in grupos_response.json()
+        ]
+        return grupos
+    
+    except Exception:
+        return []
+
+def obtener_datos_db(user_id: str):
+    """
+    Obtiene datos de la base de datos del usuario (legajo, dni).
+    """
+    legajo = 0
+    dni = 0
+    
+    try:
+        db = SessionLocal()
+        usuario_db = db.query(Usuarios).filter(Usuarios.id == user_id).first()
+        db.close()
+        
+        if usuario_db:
+            legajo = usuario_db.legajo if usuario_db.legajo is not None else 0
+            dni = usuario_db.dni if usuario_db.dni is not None else 0
+    
+    except Exception:
+        pass
+    
+    return legajo, dni
 
 async def procesar_detalles_usuario_por_id(user_id: str):
     """
@@ -45,50 +95,14 @@ async def procesar_detalles_usuario_por_id(user_id: str):
     required_actions = usuario_keycloak.get("requiredActions", [])
     cambiar_contraseña = "UPDATE_PASSWORD" in required_actions
     
-    grupos = []
-    try:
-        token = await get_admin_token()
-        
-        headers = {
-            "Authorization": f"Bearer {token}"
-        }
-        
-        grupos_url = (
-            f"{get_admin_base_url()}"
-            f"/users/{user_id}/groups"
-        )
-        
-        async with httpx.AsyncClient() as client:
-            grupos_response = await client.get(
-                grupos_url,
-                headers=headers
-            )
-            
-            grupos_response.raise_for_status()
-        
-        grupos = [
-            grupo["name"]
-            for grupo in grupos_response.json()
-        ]
+    # Obtener token una sola vez
+    token = await get_admin_token()
     
-    except Exception as e:
-        grupos = []
-    
-    legajo = 0
-    dni = 0
-    
-    try:
-        db = SessionLocal()
-        usuario_db = db.query(Usuarios).filter(Usuarios.id == user_id).first()
-        db.close()
-        
-        if usuario_db:
-            legajo = usuario_db.legajo if usuario_db.legajo is not None else 0
-            dni = usuario_db.dni if usuario_db.dni is not None else 0
-    
-    except Exception as e:
-        legajo = 0
-        dni = 0
+    # Ejecutar llamadas a grupos y base de datos en paralelo
+    grupos, (legajo, dni) = await asyncio.gather(
+        obtener_grupos_usuario(user_id, token),
+        asyncio.to_thread(obtener_datos_db, user_id)
+    )
     
     return {
         "id": user_id,

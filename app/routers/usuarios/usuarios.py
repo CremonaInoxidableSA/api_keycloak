@@ -58,22 +58,3 @@ async def create_new_user(
                 status_code=400,
                 detail=str(e)
             )
-
-@router.put(
-    "/editar-usuario",
-    dependencies=[Depends(require_role("EDITAR_USUARIOS"))]
-)
-async def update_user(
-    user_id: str,
-    data: UpdateUserRequest,
-    current_user: AuthenticatedUser = Depends(get_current_user)
-):
-
-    await update_user_keycloak(
-        user_id=user_id,
-        data=data
-    )
-
-    return {
-        "detail": "Usuario actualizado correctamente"
-    }

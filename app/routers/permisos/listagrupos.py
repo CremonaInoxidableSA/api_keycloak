@@ -6,12 +6,12 @@ from app.security.dependencies import get_current_user
 from app.schemas.authenticated_user import AuthenticatedUser
 
 router = APIRouter(
-    prefix="/permisos",
+    prefix="/grupos",
     tags=["Permisos"]
 )
 
 @router.get(
-    "/grupos",
+    "/lista",
     dependencies=[Depends(require_role("CONSULTAR_GRUPOS"))]
 )
 async def listar_grupos(

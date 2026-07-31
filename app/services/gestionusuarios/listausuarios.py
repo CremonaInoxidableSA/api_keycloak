@@ -1,9 +1,30 @@
 import httpx
+import asyncio
 from app.services.keycloak_admin import (
     get_admin_base_url,
     get_admin_token
 )
 
+async def obtener_grupos_usuario(client: httpx.AsyncClient, user_id: str, headers: dict):
+    """
+    Obtiene los grupos de un usuario específico.
+    """
+    grupos_url = f"{get_admin_base_url()}/users/{user_id}/groups"
+    
+    try:
+        response = await client.get(
+            grupos_url,
+            headers=headers
+        )
+        response.raise_for_status()
+        
+        grupos = [
+            grupo["name"]
+            for grupo in response.json()
+        ]
+        return grupos
+    except Exception:
+        return []
 
 async def obtener_lista_usuarios(numero_pagina: int = 1, filtro: str = None):
     """
@@ -51,8 +72,8 @@ async def obtener_lista_usuarios(numero_pagina: int = 1, filtro: str = None):
             
             usuarios = response.json()
         
-        # Procesar usuarios para incluir grupos
-        usuarios_procesados = []
+        # Filtrar usuarios primero (antes de obtener grupos)
+        usuarios_filtrados = []
         
         for usuario in usuarios:
             # Aplicar filtro si se proporciona
@@ -66,27 +87,24 @@ async def obtener_lista_usuarios(numero_pagina: int = 1, filtro: str = None):
                 if not (filtro_lower in email or filtro_lower in nombre or filtro_lower in apellido):
                     continue
             
-            user_id = usuario.get("id")
-            
-            # Obtener grupos del usuario
-            grupos_url = (
-                f"{get_admin_base_url()}"
-                f"/users/{user_id}/groups"
-            )
-            
-            async with httpx.AsyncClient() as client:
-                grupos_response = await client.get(
-                    grupos_url,
-                    headers=headers
-                )
-                
-                grupos_response.raise_for_status()
-            
-            grupos = [
-                grupo["name"]
-                for grupo in grupos_response.json()
+            usuarios_filtrados.append(usuario)
+        
+        # Aplicar paginación: obtener solo los usuarios de esta página
+        usuarios_pagina = usuarios_filtrados[skip:skip + usuarios_por_pagina]
+        
+        # Obtener grupos de los usuarios de esta página en paralelo
+        async with httpx.AsyncClient() as client:
+            tareas = [
+                obtener_grupos_usuario(client, usuario.get("id"), headers)
+                for usuario in usuarios_pagina
             ]
             
+            grupos_list = await asyncio.gather(*tareas)
+        
+        # Procesar usuarios con sus grupos
+        usuarios_procesados = []
+        
+        for usuario, grupos in zip(usuarios_pagina, grupos_list):
             usuario_procesado = {
                 "id": usuario.get("id"),
                 "email": usuario.get("email"),
@@ -98,10 +116,7 @@ async def obtener_lista_usuarios(numero_pagina: int = 1, filtro: str = None):
             
             usuarios_procesados.append(usuario_procesado)
         
-        # Aplicar paginación: retornar 10 usuarios de la página especificada
-        usuarios_paginados = usuarios_procesados[skip:skip + usuarios_por_pagina]
-        
-        return usuarios_paginados, len(usuarios_procesados)
+        return usuarios_procesados, len(usuarios_filtrados)
     
     except httpx.HTTPError as e:
         raise Exception(f"Error al conectar con Keycloak: {str(e)}")
