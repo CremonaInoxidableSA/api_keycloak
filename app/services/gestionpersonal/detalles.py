@@ -16,11 +16,11 @@ async def procesar_detalles(user: AuthenticatedUser):
     
     for rol in roles:
         if rol.startswith("MODULO_"):
-            modulos.append(rol)
+            modulos.append({"nombre": rol})
         elif rol.startswith("SUBMODULO_"):
-            submodulos.append(rol)
+            submodulos.append({"nombre": rol})
         elif rol.startswith("PERMISO_"):
-            permisos.append(rol)
+            permisos.append({"nombre": rol})
     
     grupos = []
     try:
@@ -44,7 +44,7 @@ async def procesar_detalles(user: AuthenticatedUser):
             grupos_response.raise_for_status()
         
         grupos = [
-            grupo["name"]
+            {"nombre": grupo["name"]}
             for grupo in grupos_response.json()
         ]
     
