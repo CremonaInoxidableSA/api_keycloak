@@ -18,7 +18,7 @@ router = APIRouter(
 
 @router.post(
     "/crear-usuario",
-    dependencies=[Depends(require_role("CREAR_USUARIOS"))]
+    dependencies=[Depends(require_role("PERMISO_CREAR_USUARIOS"))]
 )
 async def create_new_user(
     data: CreateUserRequest

@@ -12,7 +12,7 @@ router = APIRouter(
 
 @router.get(
     "/lista",
-    dependencies=[Depends(require_role("CONSULTAR_SUBMODULOS"))]
+    dependencies=[Depends(require_role("PERMISO_CONSULTAR_SUBMODULOS"))]
 )
 async def listar_submodulos(
     numero_pagina: int = Query(1, ge=1, description="Número de página (empezando desde 1)"),

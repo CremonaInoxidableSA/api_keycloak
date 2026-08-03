@@ -12,7 +12,7 @@ router = APIRouter(
 
 @router.get(
     "/detalles",
-    dependencies=[Depends(require_role("CONSULTAR_USUARIOS"))]
+    dependencies=[Depends(require_role("PERMISO_CONSULTAR_USUARIOS"))]
 )
 async def obtener_detalles_usuario(
     user_id: str,
@@ -22,8 +22,6 @@ async def obtener_detalles_usuario(
     Obtiene los detalles de un usuario específico por su ID.
     Retorna información sobre módulos, submódulos, permisos, 
     grupos y datos de legajo/DNI.
-    
-    Requiere el rol: CONSULTAR_USUARIOS
     """
     try:
         detalles = await procesar_detalles_usuario_por_id(user_id)

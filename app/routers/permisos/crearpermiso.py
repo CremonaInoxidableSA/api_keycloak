@@ -13,7 +13,7 @@ router = APIRouter(
 
 @router.post(
     "/crear-permiso",
-    dependencies=[Depends(require_role("CREAR_PERMISOS"))]
+    dependencies=[Depends(require_role("PERMISO_CREAR_PERMISOS"))]
 )
 async def create_new_permiso(
     data: CreatePermisoRequest,

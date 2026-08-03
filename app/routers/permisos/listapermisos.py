@@ -12,7 +12,7 @@ router = APIRouter(
 
 @router.get(
     "/lista",
-    dependencies=[Depends(require_role("CONSULTAR_PERMISOS"))]
+    dependencies=[Depends(require_role("PERMISO_CONSULTAR_PERMISOS"))]
 )
 async def listar_permisos(
     numero_pagina: int = Query(1, ge=1, description="Número de página (empezando desde 1)"),

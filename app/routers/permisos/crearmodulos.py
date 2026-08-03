@@ -13,7 +13,7 @@ router = APIRouter(
 
 @router.post(
     "/crear-modulo",
-    dependencies=[Depends(require_role("CREAR_MODULOS"))]
+    dependencies=[Depends(require_role("PERMISO_CREAR_MODULOS"))]
 )
 async def create_new_module(
     data: CreateModuleRequest,

@@ -16,7 +16,7 @@ router = APIRouter(
 
 @router.put(
     "/reset-password",
-    dependencies=[Depends(require_role("CONTRASEÑA_USUARIOS"))]
+    dependencies=[Depends(require_role("PERMISO_CONTRASEÑA_USUARIOS"))]
 )
 async def reset_password(
     user_id: str,

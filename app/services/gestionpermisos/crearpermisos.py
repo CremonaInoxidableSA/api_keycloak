@@ -24,7 +24,7 @@ async def crear_permiso(
     
     try:
         await get_realm_role(role_name)
-        raise Exception("El permiso ya existe en Keycloak.")
+        raise Exception("El permiso ya existe.")
     except Exception as e:
         error_str = str(e)
         if "ya existe en Keycloak" in error_str:
@@ -38,7 +38,7 @@ async def crear_permiso(
     except Exception as e:
         error_str = str(e)
         if "409" in error_str or "Conflict" in error_str:
-            raise Exception("El permiso ya existe en Keycloak.")
+            raise Exception("El permiso ya existe.")
         else:
             raise Exception(f"Error en Keycloak: {error_str}")
     

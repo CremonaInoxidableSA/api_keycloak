@@ -21,7 +21,7 @@ def validar_email(email: str) -> bool:
 
 @router.put(
     "/editar",
-    dependencies=[Depends(require_role("EDITAR_USUARIOS"))]
+    dependencies=[Depends(require_role("PERMISO_EDITAR_USUARIOS"))]
 )
 async def editar_usuario(
     user_id: str,
