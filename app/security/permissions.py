@@ -13,7 +13,7 @@ def require_role(role: str):
         if role not in usuario.roles:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
-                detail=f"Se requiere el rol '{role}'."
+                detail=f"Se requiere el permiso '{role}'."
             )
 
         return usuario

@@ -46,24 +46,7 @@ async def crear_usuario(
 ):
     """
     Crea un usuario en Keycloak y luego en MySQL.
-    Verifica conexiones antes de proceder.
-    
-    Args:
-        username: Username del usuario
-        email: Email del usuario
-        first_name: Nombre del usuario
-        last_name: Apellido del usuario
-        password: Contraseña temporal del usuario
-        habilitado: Si el usuario está habilitado (default: True)
-        dni: DNI del usuario (opcional)
-        legajo: Legajo del usuario (opcional)
-        realm_roles: Roles de Keycloak a asignar (opcional)
-    
-    Returns:
-        dict con estado de creación y datos del usuario
-    
-    Raises:
-        Exception: Con mensaje específico del error
+    Verifica conexiones antes de crear.
     """
     
     await verificar_conexiones()

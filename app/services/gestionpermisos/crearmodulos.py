@@ -59,12 +59,12 @@ async def crear_modulo(
     db = SessionLocal()
     try:
         modulo_existente = db.query(Modulos).filter(
-            (Modulos.nombre == role_name) | (Modulos.path == path)
+            (Modulos.nombre == role_name) & (Modulos.path == path)
         ).first()
         
         if modulo_existente:
             db.close()
-            raise Exception("El módulo ya existe en la base de datos.")
+            raise Exception("El módulo/path ya existe en la base de datos.")
     finally:
         db.close()
     

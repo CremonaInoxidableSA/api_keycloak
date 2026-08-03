@@ -152,5 +152,5 @@ async def editar_usuario(
     
     return {
         "id": user_id,
-        "mensaje": "Usuario actualizado exitosamente"
+        "detail": "Usuario actualizado exitosamente"
     }

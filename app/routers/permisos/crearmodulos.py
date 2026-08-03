@@ -40,7 +40,7 @@ async def create_new_module(
             raise HTTPException(status_code=400, detail=error_str)
         elif "ya existe en Keycloak" in error_str:
             raise HTTPException(status_code=409, detail=error_str)
-        elif "o path ya existe en la base de datos" in error_str:
+        elif "ya existe en la base de datos" in error_str:
             raise HTTPException(status_code=409, detail=error_str)
         elif "Error en Keycloak" in error_str or "Error en base de datos" in error_str:
             raise HTTPException(status_code=500, detail=error_str)

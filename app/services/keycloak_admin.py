@@ -213,3 +213,47 @@ async def create_realm_role(role_name: str, description: str = ""):
     role = await get_realm_role(role_name)
     
     return role
+
+
+async def update_realm_role(old_role_name: str, new_role_name: str, description: str = ""):
+    """
+    Actualiza un rol en Keycloak (principalmente el nombre).
+    
+    Args:
+        old_role_name: Nombre actual del rol en Keycloak
+        new_role_name: Nuevo nombre del rol
+        description: Nueva descripción del rol (opcional)
+    
+    Returns:
+        dict con datos del rol actualizado
+    
+    Raises:
+        Exception: Si ocurre un error en la actualización
+    """
+    
+    token = await get_admin_token()
+    
+    url = (
+        f"{get_admin_base_url()}"
+        f"/roles/{old_role_name}"
+    )
+    
+    body = {
+        "name": new_role_name,
+        "description": description
+    }
+    
+    async with httpx.AsyncClient() as client:
+        response = await client.put(
+            url,
+            json=body,
+            headers={
+                "Authorization": f"Bearer {token}"
+            }
+        )
+        
+        response.raise_for_status()
+    
+    role = await get_realm_role(new_role_name)
+    
+    return role

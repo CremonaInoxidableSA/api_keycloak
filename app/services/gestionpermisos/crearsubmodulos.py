@@ -60,12 +60,12 @@ async def crear_submodulo(
     db = SessionLocal()
     try:
         submodulo_existente = db.query(Submodulos).filter(
-            (Submodulos.nombre == role_name) | (Submodulos.path == path)
+            (Submodulos.nombre == role_name) & (Submodulos.path == path)
         ).first()
         
         if submodulo_existente:
             db.close()
-            raise Exception("El submódulo ya existe en la base de datos.")
+            raise Exception("El submódulo/path ya existe en la base de datos.")
         
         modulo_padre_existente = db.query(Modulos).filter(
             Modulos.nombre == modulo_padre

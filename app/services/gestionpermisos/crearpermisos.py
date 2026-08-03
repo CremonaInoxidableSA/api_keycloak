@@ -10,7 +10,8 @@ from app.core.config import settings
 
 
 async def crear_permiso(
-    nombre: str
+    nombre: str,
+    descripcion: str = ""
 ):
     """
     Crea un permiso en Keycloak.
@@ -31,7 +32,8 @@ async def crear_permiso(
     
     try:
         await create_realm_role(
-            role_name=role_name
+            role_name=role_name,
+            description=descripcion
         )
     except Exception as e:
         error_str = str(e)
@@ -41,6 +43,5 @@ async def crear_permiso(
             raise Exception(f"Error en Keycloak: {error_str}")
     
     return {
-        "detail": "Permiso creado exitosamente",
-        "nombre": role_name
+        "detail": "Permiso creado exitosamente"
     }

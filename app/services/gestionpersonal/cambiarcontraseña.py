@@ -15,16 +15,6 @@ async def cambiar_contraseña_usuario(
     
     Se utiliza para que el usuario cambie su propia contraseña.
     La contraseña no se marca como temporal.
-    
-    Args:
-        user_id: ID del usuario en Keycloak (del JWT)
-        new_password: Nueva contraseña del usuario
-    
-    Returns:
-        dict con estado del cambio de contraseña
-    
-    Raises:
-        Exception: Con mensaje específico del error
     """
 
     try:

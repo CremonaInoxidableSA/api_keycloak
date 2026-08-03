@@ -25,7 +25,8 @@ async def create_new_permiso(
 
     try:
         resultado = await crear_permiso(
-            nombre=data.nombre
+            nombre=data.nombre,
+            descripcion=data.descripcion or ""
         )
 
         return resultado
