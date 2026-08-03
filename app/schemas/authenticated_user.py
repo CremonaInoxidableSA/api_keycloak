@@ -38,6 +38,11 @@ class AuthenticatedUser(BaseModel):
         description="Roles asignados al usuario"
     )
 
+    groups: list[str] = Field(
+        default_factory=list,
+        description="Grupos a los que pertenece el usuario"
+    )
+
     raw_token: dict[str, Any] | None = Field(
         default=None,
         description="Payload original del JWT"

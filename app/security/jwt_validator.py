@@ -78,6 +78,11 @@ class JWTValidator:
             []
         )
 
+        groups = payload.get(
+            "groups",
+            []
+        )
+
         return AuthenticatedUser(
             id=payload.get("sub"),
 
@@ -98,6 +103,8 @@ class JWTValidator:
             ),
 
             roles=roles,
+
+            groups=groups,
 
             raw_token=payload
         )

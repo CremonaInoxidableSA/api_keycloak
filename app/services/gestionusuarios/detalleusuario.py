@@ -95,10 +95,8 @@ async def procesar_detalles_usuario_por_id(user_id: str):
     required_actions = usuario_keycloak.get("requiredActions", [])
     cambiar_contraseña = "UPDATE_PASSWORD" in required_actions
     
-    # Obtener token una sola vez
     token = await get_admin_token()
     
-    # Ejecutar llamadas a grupos y base de datos en paralelo
     grupos, (legajo, dni) = await asyncio.gather(
         obtener_grupos_usuario(user_id, token),
         asyncio.to_thread(obtener_datos_db, user_id)
