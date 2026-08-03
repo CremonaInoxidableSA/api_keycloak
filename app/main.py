@@ -15,10 +15,16 @@ from app.routers.usuarios import gestionpersonal
 from app.routers.usuarios import listausuarios
 from app.routers.usuarios import detalleusuario
 from app.routers.usuarios import editarusuario
+
+
 from app.routers.permisos import listagrupos
 from app.routers.permisos import listamodulos
 from app.routers.permisos import listasubmodulos
 from app.routers.permisos import listapermisos
+from app.routers.permisos import crearmodulos
+from app.routers.permisos import crearsubmodulos
+from app.routers.permisos import crearpermiso
+
 
 #Cosas MYSQL
 from sqlalchemy import create_engine, text 
@@ -62,3 +68,6 @@ app.include_router(listagrupos.router)
 app.include_router(listamodulos.router)
 app.include_router(listasubmodulos.router)
 app.include_router(listapermisos.router)
+app.include_router(crearmodulos.router)
+app.include_router(crearsubmodulos.router)
+app.include_router(crearpermiso.router)

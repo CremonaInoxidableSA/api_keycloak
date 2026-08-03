@@ -5,8 +5,6 @@ from app.schemas.edit_user import UpdateUserRequest
 
 from app.services.keycloak_admin import get_user
 
-from app.services.gestionusuarios.actualizarusuario import update_user_keycloak
-
 from app.services.gestionusuarios.crearusuario import crear_usuario
 
 from app.security.permissions import require_role

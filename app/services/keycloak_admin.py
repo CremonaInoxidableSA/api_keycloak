@@ -170,3 +170,46 @@ async def delete_user(user_id: str):
         )
 
         response.raise_for_status()
+
+
+async def create_realm_role(role_name: str, description: str = ""):
+    """
+    Crea un rol en Keycloak.
+    
+    Args:
+        role_name: Nombre del rol a crear
+        description: Descripción del rol (opcional)
+    
+    Returns:
+        dict con datos del rol creado
+    
+    Raises:
+        Exception: Si ocurre un error en la creación
+    """
+
+    token = await get_admin_token()
+
+    url = (
+        f"{get_admin_base_url()}"
+        "/roles"
+    )
+
+    body = {
+        "name": role_name,
+        "description": description
+    }
+
+    async with httpx.AsyncClient() as client:
+        response = await client.post(
+            url,
+            json=body,
+            headers={
+                "Authorization": f"Bearer {token}"
+            }
+        )
+
+        response.raise_for_status()
+
+    role = await get_realm_role(role_name)
+    
+    return role

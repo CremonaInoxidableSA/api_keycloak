@@ -65,7 +65,6 @@ async def obtener_modulos_realm(numero_pagina: int = 1, filtro: str = None):
         return modulos_paginados, len(modulos_procesados)
     
     except httpx.HTTPError as e:
-        # Intentar obtener el body de la respuesta para debugging
         error_detail = str(e)
         if hasattr(e, 'response') and e.response:
             try:
