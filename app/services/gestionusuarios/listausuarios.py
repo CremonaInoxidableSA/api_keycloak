@@ -41,11 +41,9 @@ async def obtener_lista_usuarios(numero_pagina: int = 1, filtro: str = None):
         Exception: Si hay error al conectar con Keycloak
     """
     
-    # Validar que numero_pagina sea válido
     if numero_pagina < 1:
         numero_pagina = 1
     
-    # Calcular skip basado en el número de página
     usuarios_por_pagina = 10
     skip = (numero_pagina - 1) * usuarios_por_pagina
     
@@ -56,7 +54,6 @@ async def obtener_lista_usuarios(numero_pagina: int = 1, filtro: str = None):
             "Authorization": f"Bearer {token}"
         }
         
-        # URL para obtener usuarios sin límite inicial (necesitamos filtrar en memoria)
         url = (
             f"{get_admin_base_url()}"
             f"/users"
@@ -72,11 +69,9 @@ async def obtener_lista_usuarios(numero_pagina: int = 1, filtro: str = None):
             
             usuarios = response.json()
         
-        # Filtrar usuarios primero (antes de obtener grupos)
         usuarios_filtrados = []
         
         for usuario in usuarios:
-            # Aplicar filtro si se proporciona
             if filtro:
                 email = usuario.get("email", "").lower()
                 nombre = usuario.get("firstName", "").lower()
@@ -89,10 +84,8 @@ async def obtener_lista_usuarios(numero_pagina: int = 1, filtro: str = None):
             
             usuarios_filtrados.append(usuario)
         
-        # Aplicar paginación: obtener solo los usuarios de esta página
         usuarios_pagina = usuarios_filtrados[skip:skip + usuarios_por_pagina]
         
-        # Obtener grupos de los usuarios de esta página en paralelo
         async with httpx.AsyncClient() as client:
             tareas = [
                 obtener_grupos_usuario(client, usuario.get("id"), headers)
@@ -101,7 +94,6 @@ async def obtener_lista_usuarios(numero_pagina: int = 1, filtro: str = None):
             
             grupos_list = await asyncio.gather(*tareas)
         
-        # Procesar usuarios con sus grupos
         usuarios_procesados = []
         
         for usuario, grupos in zip(usuarios_pagina, grupos_list):

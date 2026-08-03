@@ -1,19 +1,38 @@
 import httpx
+import asyncio
 from app.services.keycloak_admin import (
     get_admin_base_url,
     get_admin_token
 )
+from app.config.db import SessionLocal
+from app.models.modulos import Modulos
+
+def obtener_datos_modulos_db():
+    """
+    Obtiene todos los datos de módulos de la base de datos.
+    """
+    try:
+        db = SessionLocal()
+        modulos = db.query(Modulos).all()
+        db.close()
+        
+        modulos_dict = {}
+        for modulo in modulos:
+            modulos_dict[modulo.nombre] = {
+                "subdominio": modulo.subdominio,
+                "path": modulo.path,
+                "icono": modulo.icono
+            }
+        
+        return modulos_dict
+    
+    except Exception as e:
+        return {}
 
 async def obtener_modulos_realm(numero_pagina: int = 1, filtro: str = None):
     """
     Obtiene la lista de módulos del realm que comienzan con "MODULO_" con paginación y filtro.
-    
-    Args:
-        numero_pagina: Número de página (empezando desde 1)
-        filtro: String para filtrar módulos por nombre
-    
-    Returns:
-        Tupla con (lista de módulos, total de módulos que coinciden)
+    Combina datos de Keycloak con datos de la base de datos local.
     """
     
     if numero_pagina < 1:
@@ -59,6 +78,22 @@ async def obtener_modulos_realm(numero_pagina: int = 1, filtro: str = None):
             }
             
             modulos_procesados.append(modulo_procesado)
+        
+        # Obtener datos de la BD en paralelo
+        modulos_db = await asyncio.to_thread(obtener_datos_modulos_db)
+        
+        # Combinar datos de Keycloak con BD
+        for modulo in modulos_procesados:
+            nombre = modulo["nombre"]
+            if nombre in modulos_db:
+                modulo["subdominio"] = modulos_db[nombre]["subdominio"]
+                modulo["path"] = modulos_db[nombre]["path"]
+                modulo["icono"] = modulos_db[nombre]["icono"]
+            else:
+                # Si no existe en BD, usar valores vacíos
+                modulo["subdominio"] = ""
+                modulo["path"] = ""
+                modulo["icono"] = ""
         
         modulos_paginados = modulos_procesados[skip:skip + modulos_por_pagina]
         

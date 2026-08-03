@@ -50,9 +50,6 @@ async def listar_submodulos(
         
         return {
             "data": submodulos,
-            "modulo_padre": "ejemplomodulopadre",
-            "path": "ejemplopath",
-            "icono": "ejemploicono",
             "paginacion": {
                 "total_paginas": total_paginas,
                 "total_submodulos": total

@@ -60,17 +60,6 @@ def obtener_datos_db(user_id: str):
 async def procesar_detalles_usuario_por_id(user_id: str):
     """
     Obtiene los detalles de un usuario específico por su ID.
-    Retorna información estructurada sobre módulos, submódulos, permisos,
-    grupos, datos de legajo y DNI de la base de datos.
-    
-    Args:
-        user_id: ID del usuario en Keycloak
-    
-    Returns:
-        Dict con información procesada del usuario
-        
-    Raises:
-        Exception: Si el usuario no existe en Keycloak
     """
     
     try:

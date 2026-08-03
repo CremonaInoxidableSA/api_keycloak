@@ -1,8 +1,9 @@
 from fastapi import APIRouter, HTTPException, Depends
+import httpx
 
 from app.schemas.estado_user import EstadoUserRequest
 
-from app.services.keycloak_admin import get_user
+from app.services.keycloak_admin import get_user, get_admin_base_url, get_admin_token
 
 from app.services.gestionusuarios.estadousuario import estado_user_keycloak
 
@@ -14,6 +15,34 @@ router = APIRouter(
     prefix="/usuarios",
     tags=["Usuarios"]
 )
+
+async def obtener_grupos_usuario(user_id: str, token: str):
+    """
+    Obtiene los grupos de un usuario específico.
+    """
+    try:
+        headers = {
+            "Authorization": f"Bearer {token}"
+        }
+        
+        grupos_url = f"{get_admin_base_url()}/users/{user_id}/groups"
+        
+        async with httpx.AsyncClient() as client:
+            grupos_response = await client.get(
+                grupos_url,
+                headers=headers
+            )
+            
+            grupos_response.raise_for_status()
+        
+        grupos = [
+            grupo["name"]
+            for grupo in grupos_response.json()
+        ]
+        return grupos
+    
+    except Exception:
+        return []
 
 @router.put(
     "/habilitar-usuarios",
@@ -70,11 +99,13 @@ async def disable_user(
                 "detail": "El usuario ya se encuentra deshabilitado"
             }
         
-        realm_roles = user_data.get("realm_roles", [])
-        if "SUPERADMIN" in realm_roles:
+        token = await get_admin_token()
+        grupos = await obtener_grupos_usuario(user_id, token)
+        
+        if "GRUPO_SUPERADMIN" in grupos:
             raise HTTPException(
                 status_code=403,
-                detail="No se puede deshabilitar un usuario con rol SUPERADMIN"
+                detail="No se puede deshabilitar un usuario con el grupo SUPERADMIN"
             )
         
         from app.schemas.estado_user import EstadoUserRequest as UpdateRequest

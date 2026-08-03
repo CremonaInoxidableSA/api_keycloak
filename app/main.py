@@ -27,6 +27,8 @@ from app.routers.permisos import crearpermiso
 from app.routers.permisos import editarmodulos
 from app.routers.permisos import editarsubmodulos
 from app.routers.permisos import editarpermisos
+from app.routers.permisos import creargrupos
+from app.routers.permisos import editargrupos
 
 
 #Cosas MYSQL
@@ -77,3 +79,5 @@ app.include_router(crearpermiso.router)
 app.include_router(editarmodulos.router)
 app.include_router(editarsubmodulos.router)
 app.include_router(editarpermisos.router)
+app.include_router(creargrupos.router)
+app.include_router(editargrupos.router)

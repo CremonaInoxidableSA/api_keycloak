@@ -50,9 +50,6 @@ async def listar_modulos(
         
         return {
             "data": modulos,
-            "subdominio": "ejemplosubdominio",
-            "path": "ejemplopath",
-            "icono": "ejemploicono",
             "paginacion": {
                 "total_paginas": total_paginas,
                 "total_modulos": total

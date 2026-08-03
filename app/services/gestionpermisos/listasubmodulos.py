@@ -1,19 +1,38 @@
 import httpx
+import asyncio
 from app.services.keycloak_admin import (
     get_admin_base_url,
     get_admin_token
 )
+from app.config.db import SessionLocal
+from app.models.submodulos import Submodulos
+
+def obtener_datos_submodulos_db():
+    """
+    Obtiene todos los datos de submódulos de la base de datos.
+    """
+    try:
+        db = SessionLocal()
+        submodulos = db.query(Submodulos).all()
+        db.close()
+        
+        submodulos_dict = {}
+        for submodulo in submodulos:
+            submodulos_dict[submodulo.nombre] = {
+                "modulo_padre": submodulo.modulo_padre,
+                "path": submodulo.path,
+                "icono": submodulo.icono
+            }
+        
+        return submodulos_dict
+    
+    except Exception as e:
+        return {}
 
 async def obtener_submodulos_realm(numero_pagina: int = 1, filtro: str = None):
     """
     Obtiene la lista de submódulos del realm que comienzan con "SUBMODULO_" con paginación y filtro.
-    
-    Args:
-        numero_pagina: Número de página (empezando desde 1)
-        filtro: String para filtrar submódulos por nombre
-    
-    Returns:
-        Tupla con (lista de submódulos, total de submódulos que coinciden)
+    Combina datos de Keycloak con datos de la base de datos local.
     """
     
     if numero_pagina < 1:
@@ -59,6 +78,22 @@ async def obtener_submodulos_realm(numero_pagina: int = 1, filtro: str = None):
             }
             
             submodulos_procesados.append(submodulo_procesado)
+        
+        # Obtener datos de la BD en paralelo
+        submodulos_db = await asyncio.to_thread(obtener_datos_submodulos_db)
+        
+        # Combinar datos de Keycloak con BD
+        for submodulo in submodulos_procesados:
+            nombre = submodulo["nombre"]
+            if nombre in submodulos_db:
+                submodulo["modulo_padre"] = submodulos_db[nombre]["modulo_padre"]
+                submodulo["path"] = submodulos_db[nombre]["path"]
+                submodulo["icono"] = submodulos_db[nombre]["icono"]
+            else:
+                # Si no existe en BD, usar valores vacíos
+                submodulo["modulo_padre"] = ""
+                submodulo["path"] = ""
+                submodulo["icono"] = ""
         
         submodulos_paginados = submodulos_procesados[skip:skip + submodulos_por_pagina]
         
