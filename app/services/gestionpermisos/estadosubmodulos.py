@@ -26,9 +26,7 @@ def habilitar_submodulo(nombre: str):
         db.close()
         
         return {
-            "mensaje": f"Submódulo '{nombre}' habilitado exitosamente",
-            "nombre": nombre,
-            "habilitado": True
+            "detail": f"Submódulo '{nombre}' habilitado exitosamente"
         }
     
     except Exception as e:
@@ -59,9 +57,7 @@ def deshabilitar_submodulo(nombre: str):
         db.close()
         
         return {
-            "mensaje": f"Submódulo '{nombre}' deshabilitado exitosamente",
-            "nombre": nombre,
-            "habilitado": False
+            "detail": f"Submódulo '{nombre}' deshabilitado exitosamente"
         }
     
     except Exception as e:

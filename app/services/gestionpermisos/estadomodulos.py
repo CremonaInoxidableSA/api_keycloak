@@ -26,9 +26,7 @@ def habilitar_modulo(nombre: str):
         db.close()
         
         return {
-            "mensaje": f"Módulo '{nombre}' habilitado exitosamente",
-            "nombre": nombre,
-            "habilitado": True
+            "detail": f"Módulo '{nombre}' habilitado exitosamente"
         }
     
     except Exception as e:
@@ -59,9 +57,7 @@ def deshabilitar_modulo(nombre: str):
         db.close()
         
         return {
-            "mensaje": f"Módulo '{nombre}' deshabilitado exitosamente",
-            "nombre": nombre,
-            "habilitado": False
+            "detail": f"Módulo '{nombre}' deshabilitado exitosamente"
         }
     
     except Exception as e:
