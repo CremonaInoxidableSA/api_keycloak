@@ -15,6 +15,8 @@ from app.routers.usuarios import gestionpersonal
 from app.routers.usuarios import listausuarios
 from app.routers.usuarios import detalleusuario
 from app.routers.usuarios import editarusuario
+from app.routers.usuarios import modulospersonales
+from app.routers.usuarios import submodulospersonales
 
 
 from app.routers.permisos import listagrupos
@@ -69,6 +71,8 @@ app.include_router(gestionpersonal.router)
 app.include_router(listausuarios.router)
 app.include_router(detalleusuario.router)
 app.include_router(editarusuario.router)
+app.include_router(modulospersonales.router)
+app.include_router(submodulospersonales.router)
 app.include_router(listagrupos.router)
 app.include_router(listamodulos.router)
 app.include_router(listasubmodulos.router)
