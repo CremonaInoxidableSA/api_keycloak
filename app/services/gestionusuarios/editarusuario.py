@@ -72,11 +72,22 @@ async def editar_usuario(
             response.raise_for_status()
     
     if grupos is not None:
-        grupos_disponibles_list, _ = await obtener_grupos_realm()
-        grupos_disponibles_names = {
-            g["nombre"]
-            for g in grupos_disponibles_list
-        }
+        # Obtener TODOS los grupos disponibles (sin paginación)
+        all_grupos_url = f"{get_admin_base_url()}/groups"
+        
+        async with httpx.AsyncClient() as client:
+            all_grupos_response = await client.get(
+                all_grupos_url,
+                headers=headers
+            )
+            all_grupos_response.raise_for_status()
+            
+            all_grupos = all_grupos_response.json()
+            grupos_disponibles_names = {
+                g["name"]
+                for g in all_grupos
+                if g["name"].startswith("GRUPO_")
+            }
         
         grupos_invalidos = [
             g for g in grupos
@@ -109,17 +120,10 @@ async def editar_usuario(
                 )
                 delete_response.raise_for_status()
             
-            # Obtener lista de todos los grupos disponibles
-            all_grupos_url = f"{get_admin_base_url()}/groups"
-            all_grupos_response = await client.get(
-                all_grupos_url,
-                headers=headers
-            )
-            all_grupos_response.raise_for_status()
-            
+            # Mapeo de nombres de grupos a IDs
             grupos_disponibles = {
                 g["name"]: g["id"]
-                for g in all_grupos_response.json()
+                for g in all_grupos
             }
             
             # Asignar nuevos grupos

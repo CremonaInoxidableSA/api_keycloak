@@ -1,10 +1,11 @@
 import httpx
 from sqlalchemy import text
+from typing import Optional, List
 from app.services.keycloak_admin import (
     get_admin_base_url,
-    get_admin_token,
-    assign_realm_roles
+    get_admin_token
 )
+from app.services.gestionpermisos.listagrupos import obtener_grupos_realm
 from app.config.db import SessionLocal
 from app.models.usuarios import Usuarios
 from app.core.config import settings
@@ -42,7 +43,7 @@ async def crear_usuario(
     habilitado: bool = True,
     dni: int | None = None,
     legajo: int | None = None,
-    realm_roles: list[str] | None = None
+    grupos: Optional[List[str]] = None
 ):
     """
     Crea un usuario en Keycloak y luego en MySQL.
@@ -92,15 +93,61 @@ async def crear_usuario(
             location = response.headers["Location"]
 
         user_id = location.split("/")[-1]
-
-        if realm_roles:
-            await assign_realm_roles(
-                user_id=user_id,
-                role_names=realm_roles
-            )
     
     except Exception as e:
         raise Exception(f"Falla en creación general: {str(e)}")
+    
+    if grupos is not None:
+        try:
+            token = await get_admin_token()
+            headers = {
+                "Authorization": f"Bearer {token}"
+            }
+            
+            # Obtener TODOS los grupos disponibles (sin paginación)
+            all_grupos_url = f"{get_admin_base_url()}/groups"
+            async with httpx.AsyncClient() as client:
+                all_grupos_response = await client.get(
+                    all_grupos_url,
+                    headers=headers
+                )
+                all_grupos_response.raise_for_status()
+                
+                all_grupos = all_grupos_response.json()
+                grupos_disponibles_names = {
+                    g["name"]
+                    for g in all_grupos
+                    if g["name"].startswith("GRUPO_")
+                }
+            
+            grupos_invalidos = [
+                g for g in grupos
+                if g not in grupos_disponibles_names
+            ]
+            
+            if grupos_invalidos:
+                raise Exception(f"Los siguientes grupos no existen: {', '.join(grupos_invalidos)}")
+            
+            # Mapeo de nombres de grupos a IDs
+            grupos_disponibles = {
+                g["name"]: g["id"]
+                for g in all_grupos
+            }
+            
+            # Asignar grupos al usuario
+            grupos_url = f"{get_admin_base_url()}/users/{user_id}/groups"
+            async with httpx.AsyncClient() as client:
+                for grupo_name in grupos:
+                    if grupo_name in grupos_disponibles:
+                        grupo_id = grupos_disponibles[grupo_name]
+                        join_response = await client.put(
+                            f"{grupos_url}/{grupo_id}",
+                            headers=headers
+                        )
+                        join_response.raise_for_status()
+        
+        except Exception as e:
+            raise Exception(f"Error al asignar grupos: {str(e)}")
     
     if dni is not None and legajo is not None:
         db = SessionLocal()

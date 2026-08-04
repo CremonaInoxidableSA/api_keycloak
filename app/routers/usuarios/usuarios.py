@@ -1,7 +1,6 @@
 from fastapi import APIRouter, HTTPException, Depends
 
 from app.schemas.user import CreateUserRequest
-from app.schemas.edit_user import UpdateUserRequest
 
 from app.services.keycloak_admin import get_user
 
@@ -17,7 +16,7 @@ router = APIRouter(
 )
 
 @router.post(
-    "/crear-usuario",
+    "/crear",
     dependencies=[Depends(require_role("PERMISO_CREAR_USUARIOS"))]
 )
 async def create_new_user(
@@ -33,7 +32,8 @@ async def create_new_user(
             password=data.password,
             habilitado=data.habilitado,
             dni=data.dni,
-            legajo=data.legajo
+            legajo=data.legajo,
+            grupos=data.grupos
         )
 
         return resultado
