@@ -10,3 +10,5 @@ class CreateSubmoduleRequest(BaseModel):
     path: str
     
     icono: str | None = None
+
+    habilitado: bool

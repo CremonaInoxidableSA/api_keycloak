@@ -21,7 +21,8 @@ def obtener_datos_submodulos_db():
             submodulos_dict[submodulo.nombre] = {
                 "modulo_padre": submodulo.modulo_padre,
                 "path": submodulo.path,
-                "icono": submodulo.icono
+                "icono": submodulo.icono,
+                "habilitado": submodulo.habilitado
             }
         
         return submodulos_dict
@@ -79,21 +80,20 @@ async def obtener_submodulos_realm(numero_pagina: int = 1, filtro: str = None):
             
             submodulos_procesados.append(submodulo_procesado)
         
-        # Obtener datos de la BD en paralelo
         submodulos_db = await asyncio.to_thread(obtener_datos_submodulos_db)
         
-        # Combinar datos de Keycloak con BD
         for submodulo in submodulos_procesados:
             nombre = submodulo["nombre"]
             if nombre in submodulos_db:
                 submodulo["modulo_padre"] = submodulos_db[nombre]["modulo_padre"]
                 submodulo["path"] = submodulos_db[nombre]["path"]
                 submodulo["icono"] = submodulos_db[nombre]["icono"]
+                submodulo["habilitado"] = submodulos_db[nombre]["habilitado"]
             else:
-                # Si no existe en BD, usar valores vacíos
                 submodulo["modulo_padre"] = ""
                 submodulo["path"] = ""
                 submodulo["icono"] = ""
+                submodulo["habilitado"] = False
         
         submodulos_paginados = submodulos_procesados[skip:skip + submodulos_por_pagina]
         

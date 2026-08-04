@@ -21,7 +21,8 @@ def obtener_datos_modulos_db():
             modulos_dict[modulo.nombre] = {
                 "subdominio": modulo.subdominio,
                 "path": modulo.path,
-                "icono": modulo.icono
+                "icono": modulo.icono,
+                "habilitado": modulo.habilitado
             }
         
         return modulos_dict
@@ -89,11 +90,13 @@ async def obtener_modulos_realm(numero_pagina: int = 1, filtro: str = None):
                 modulo["subdominio"] = modulos_db[nombre]["subdominio"]
                 modulo["path"] = modulos_db[nombre]["path"]
                 modulo["icono"] = modulos_db[nombre]["icono"]
+                modulo["habilitado"] = modulos_db[nombre]["habilitado"]
             else:
                 # Si no existe en BD, usar valores vacíos
                 modulo["subdominio"] = ""
                 modulo["path"] = ""
                 modulo["icono"] = ""
+                modulo["habilitado"] = False
         
         modulos_paginados = modulos_procesados[skip:skip + modulos_por_pagina]
         

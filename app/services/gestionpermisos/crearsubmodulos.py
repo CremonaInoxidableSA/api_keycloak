@@ -37,7 +37,8 @@ async def crear_submodulo(
     modulo_padre: str,
     nombre: str,
     path: str,
-    icono: str | None = None
+    icono: str | None = None,
+    habilitado: bool = True
 ):
     """
     Crea un submódulo en Keycloak y MySQL.
@@ -95,7 +96,8 @@ async def crear_submodulo(
             modulo_padre=modulo_padre,
             nombre=role_name,
             path=path,
-            icono=icono
+            icono=icono,
+            habilitado=habilitado
         )
         
         db.add(nuevo_submodulo)
@@ -118,5 +120,6 @@ async def crear_submodulo(
         "modulo_padre": modulo_padre,
         "nombre": role_name,
         "path": path,
-        "icono": icono
+        "icono": icono,
+        "habilitado": habilitado 
     }

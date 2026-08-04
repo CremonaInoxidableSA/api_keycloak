@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import Column, Integer, String, ForeignKey, Boolean
 from sqlalchemy.orm import relationship
 from app.config.db import Base
 
@@ -10,3 +10,4 @@ class Submodulos(Base):
     nombre = Column(String(100), nullable=False,  unique=True)
     path = Column(String(255), nullable=False)
     icono = Column(String(255), nullable=True)
+    habilitado = Column(Boolean, default=True, nullable=False)

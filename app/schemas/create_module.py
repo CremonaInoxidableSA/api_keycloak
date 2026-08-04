@@ -10,3 +10,5 @@ class CreateModuleRequest(BaseModel):
     path: str
     
     icono: str | None = None
+
+    habilitado: bool

@@ -28,7 +28,8 @@ async def create_new_submodule(
             modulo_padre=data.modulo_padre,
             nombre=data.nombre,
             path=data.path,
-            icono=data.icono
+            icono=data.icono,
+            habilitado=data.habilitado
         )
 
         return resultado

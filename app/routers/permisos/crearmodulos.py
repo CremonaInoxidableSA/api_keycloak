@@ -28,7 +28,8 @@ async def create_new_module(
             nombre=data.nombre,
             subdominio=data.subdominio,
             path=data.path,
-            icono=data.icono
+            icono=data.icono,
+            habilitado=data.habilitado
         )
 
         return resultado

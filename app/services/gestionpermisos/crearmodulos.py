@@ -36,7 +36,8 @@ async def crear_modulo(
     nombre: str,
     subdominio: str,
     path: str,
-    icono: str | None = None
+    icono: str | None = None,
+    habilitado: bool = True
 ):
     """
     Crea un módulo en Keycloak y MySQL.
@@ -85,7 +86,8 @@ async def crear_modulo(
             nombre=role_name,
             subdominio=subdominio,
             path=path,
-            icono=icono
+            icono=icono,
+            habilitado=habilitado
         )
         
         db.add(nuevo_modulo)
@@ -108,5 +110,6 @@ async def crear_modulo(
         "nombre": role_name,
         "subdominio": subdominio,
         "path": path,
-        "icono": icono
+        "icono": icono,
+        "habilitado": habilitado
     }
