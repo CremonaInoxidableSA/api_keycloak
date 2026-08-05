@@ -15,7 +15,7 @@ router = APIRouter(
     dependencies=[Depends(require_role("PERMISO_ELIMINAR_PERMISOS"))]
 )
 async def delete_permiso(
-    nombre: str = Query(..., description="Nombre del permiso a eliminar"),
+    nombre_permiso: str = Query(..., description="Nombre del permiso a eliminar"),
     current_user: AuthenticatedUser = Depends(get_current_user)
 ):
     """
@@ -23,7 +23,7 @@ async def delete_permiso(
     """
     
     try:
-        resultado = await eliminar_permiso(nombre)
+        resultado = await eliminar_permiso(nombre_permiso)
         return resultado
     
     except Exception as e:

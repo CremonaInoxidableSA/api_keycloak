@@ -16,7 +16,7 @@ router = APIRouter(
     dependencies=[Depends(require_role("PERMISO_ELIMINAR_SUBMODULO"))]
 )
 async def delete_submodulo(
-    nombre: str = Query(..., description="Nombre del submódulo a eliminar"),
+    nombre_submodulo: str = Query(..., description="Nombre del submódulo a eliminar"),
     current_user: AuthenticatedUser = Depends(get_current_user)
 ):
     """
@@ -24,7 +24,7 @@ async def delete_submodulo(
     """
     
     try:
-        resultado = await eliminar_submodulo(nombre)
+        resultado = await eliminar_submodulo(nombre_submodulo)
         return resultado
     
     except Exception as e:

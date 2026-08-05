@@ -16,7 +16,7 @@ router = APIRouter(
     dependencies=[Depends(require_role("PERMISO_ELIMINAR_GRUPOS"))]
 )
 async def delete_grupo(
-    nombre: str = Query(..., description="Nombre del grupo a eliminar"),
+    nombre_grupo: str = Query(..., description="Nombre del grupo a eliminar"),
     current_user: AuthenticatedUser = Depends(get_current_user)
 ):
     """
@@ -24,7 +24,7 @@ async def delete_grupo(
     """
     
     try:
-        resultado = await eliminar_grupo(nombre)
+        resultado = await eliminar_grupo(nombre_grupo)
         return resultado
     
     except Exception as e:

@@ -16,7 +16,7 @@ router = APIRouter(
     dependencies=[Depends(require_role("PERMISO_ELIMINAR_MODULO"))]
 )
 async def delete_modulo(
-    nombre: str = Query(..., description="Nombre del módulo a eliminar"),
+    nombre_modulo: str = Query(..., description="Nombre del módulo a eliminar"),
     current_user: AuthenticatedUser = Depends(get_current_user)
 ):
     """
@@ -25,7 +25,7 @@ async def delete_modulo(
     """
     
     try:
-        resultado = await eliminar_modulo(nombre)
+        resultado = await eliminar_modulo(nombre_modulo)
         return resultado
     
     except Exception as e:
