@@ -1,29 +1,29 @@
 from fastapi import APIRouter, HTTPException, Depends, Query
 
-from app.services.gestionpermisos.eliminarpermisos import eliminar_permiso
+from app.services.gestionusuarios.eliminarusuario import eliminar_usuario
 from app.security.permissions import require_role
 from app.security.dependencies import get_current_user
 from app.schemas.authenticated_user import AuthenticatedUser
 
 router = APIRouter(
-    prefix="/permisos",
-    tags=["Permisos"]
+    prefix="/usuarios",
+    tags=["Usuarios"]
 )
 
 @router.delete(
     "/eliminar",
-    dependencies=[Depends(require_role("PERMISO_ELIMINAR_PERMISOS"))]
+    dependencies=[Depends(require_role("PERMISO_ELIMINAR_USUARIOS"))]
 )
-async def delete_permiso(
-    permiso_nombre: str = Query(..., description="Nombre del permiso a eliminar"),
+async def delete_usuario(
+    user_id: str = Query(..., description="ID del usuario a eliminar"),
     current_user: AuthenticatedUser = Depends(get_current_user)
 ):
     """
-    Elimina un permiso de Keycloak.
+    Elimina un usuario de Keycloak y BD.
     """
     
     try:
-        resultado = await eliminar_permiso(permiso_nombre)
+        resultado = await eliminar_usuario(user_id)
         return resultado
     
     except Exception as e:
@@ -37,5 +37,5 @@ async def delete_permiso(
         
         raise HTTPException(
             status_code=500,
-            detail=f"Error al eliminar permiso: {error_str}"
+            detail=f"Error al eliminar usuario: {error_str}"
         )
