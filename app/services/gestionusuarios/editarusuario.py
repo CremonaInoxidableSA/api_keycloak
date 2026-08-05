@@ -72,7 +72,6 @@ async def editar_usuario(
             response.raise_for_status()
     
     if grupos is not None:
-        # Obtener TODOS los grupos disponibles (sin paginación)
         all_grupos_url = f"{get_admin_base_url()}/groups"
         
         async with httpx.AsyncClient() as client:
@@ -97,7 +96,6 @@ async def editar_usuario(
         if grupos_invalidos:
             raise Exception(f"Los siguientes grupos no existen: {', '.join(grupos_invalidos)}")
         
-        # Obtener grupos actuales
         grupos_url = f"{get_admin_base_url()}/users/{user_id}/groups"
         
         async with httpx.AsyncClient() as client:
@@ -112,7 +110,6 @@ async def editar_usuario(
                 for g in grupos_response.json()
             ]
             
-            # Eliminar grupos actuales
             for grupo_id in grupos_actuales:
                 delete_response = await client.delete(
                     f"{grupos_url}/{grupo_id}",
@@ -120,13 +117,11 @@ async def editar_usuario(
                 )
                 delete_response.raise_for_status()
             
-            # Mapeo de nombres de grupos a IDs
             grupos_disponibles = {
                 g["name"]: g["id"]
                 for g in all_grupos
             }
             
-            # Asignar nuevos grupos
             for grupo_name in grupos:
                 if grupo_name in grupos_disponibles:
                     grupo_id = grupos_disponibles[grupo_name]
@@ -136,7 +131,6 @@ async def editar_usuario(
                     )
                     join_response.raise_for_status()
     
-    # Actualizar datos en base de datos
     if legajo is not None or dni is not None:
         try:
             db = SessionLocal()

@@ -37,6 +37,10 @@ from app.routers.permisos import detallegrupos
 from app.routers.permisos import detallemodulos
 from app.routers.permisos import detallesubmodulos
 from app.routers.permisos import detallepermisos
+from app.routers.permisos import eliminargrupos
+from app.routers.permisos import eliminarmodulos
+from app.routers.permisos import eliminarsubmodulos
+from app.routers.permisos import eliminarpermisos
 
 
 #Cosas MYSQL
@@ -101,3 +105,7 @@ app.include_router(editarpermisos.router)
 app.include_router(editargrupos.router)
 app.include_router(estadomodulos.router)
 app.include_router(estadosubmodulos.router)
+app.include_router(eliminargrupos.router)
+app.include_router(eliminarmodulos.router)
+app.include_router(eliminarsubmodulos.router)
+app.include_router(eliminarpermisos.router)
