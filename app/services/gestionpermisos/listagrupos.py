@@ -1,19 +1,11 @@
 import httpx
-from app.services.keycloak_admin import (
-    get_admin_base_url,
-    get_admin_token
-)
+
+from app.services.funcioneskeycloak.get_admin_base_url import get_admin_base_url
+from app.services.funcioneskeycloak.get_admin_token import get_admin_token
 
 async def obtener_grupos_realm(numero_pagina: int = 1, filtro: str = None):
     """
     Obtiene la lista de grupos del realm que comienzan con "GRUPO_" con paginación y filtro.
-    
-    Args:
-        numero_pagina: Número de página (empezando desde 1)
-        filtro: String para filtrar grupos por nombre
-    
-    Returns:
-        Tupla con (lista de grupos, total de grupos que coinciden)
     """
     
     if numero_pagina < 1:

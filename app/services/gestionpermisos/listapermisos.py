@@ -1,19 +1,11 @@
 import httpx
-from app.services.keycloak_admin import (
-    get_admin_base_url,
-    get_admin_token
-)
+
+from app.services.funcioneskeycloak.get_admin_base_url import get_admin_base_url
+from app.services.funcioneskeycloak.get_admin_token import get_admin_token
 
 async def obtener_permisos_realm(numero_pagina: int = 1, filtro: str = None):
     """
     Obtiene la lista de permisos del realm que comienzan con "PERMISO_" con paginación y filtro.
-    
-    Args:
-        numero_pagina: Número de página (empezando desde 1)
-        filtro: String para filtrar permisos por nombre
-    
-    Returns:
-        Tupla con (lista de permisos, total de permisos que coinciden)
     """
     
     if numero_pagina < 1:

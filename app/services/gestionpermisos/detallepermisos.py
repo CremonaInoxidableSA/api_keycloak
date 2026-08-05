@@ -1,10 +1,8 @@
 import httpx
-from app.services.keycloak_admin import (
-    get_admin_base_url,
-    get_admin_token,
-    get_realm_role
-)
 
+from app.services.funcioneskeycloak.get_admin_base_url import get_admin_base_url
+from app.services.funcioneskeycloak.get_admin_token import get_admin_token
+from app.services.funcioneskeycloak.get_realm_role import get_realm_role
 
 async def obtener_detalles_permiso(nombre_permiso: str):
     """

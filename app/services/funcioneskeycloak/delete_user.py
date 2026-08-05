@@ -1,12 +1,11 @@
 import httpx
+import json
 
-from app.services.funcioneskeycloak.get_admin_base_url import get_admin_base_url
+from app.core.config import settings
 from app.services.funcioneskeycloak.get_admin_token import get_admin_token
+from app.services.funcioneskeycloak.get_admin_base_url import get_admin_base_url
 
-async def estado_user_keycloak(
-    user_id: str,
-    data
-):
+async def delete_user(user_id: str):
 
     token = await get_admin_token()
 
@@ -15,17 +14,10 @@ async def estado_user_keycloak(
         f"/users/{user_id}"
     )
 
-    body = {}
-
-    habilitado = getattr(data, "habilitado", None)
-    if habilitado is not None:
-        body["enabled"] = habilitado
-
     async with httpx.AsyncClient() as client:
 
-        response = await client.put(
+        response = await client.delete(
             url,
-            json=body,
             headers={
                 "Authorization": f"Bearer {token}"
             }

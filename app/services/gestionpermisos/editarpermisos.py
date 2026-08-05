@@ -1,8 +1,7 @@
 from typing import Optional
-from app.services.keycloak_admin import (
-    get_realm_role,
-    update_realm_role
-)
+
+from app.services.funcioneskeycloak.get_realm_role import get_realm_role
+from app.services.funcioneskeycloak.update_realm_role import update_realm_role
 
 async def editar_permiso(
     permiso_nombre: str,

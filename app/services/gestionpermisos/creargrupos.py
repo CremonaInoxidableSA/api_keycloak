@@ -1,10 +1,8 @@
 from typing import Optional, List
-from app.services.keycloak_admin import (
-    get_realm_role,
-    create_group,
-    assign_realm_roles_to_group
-)
 
+from app.services.funcioneskeycloak.assign_realm_roles_to_group import assign_realm_roles_to_group
+from app.services.funcioneskeycloak.create_group import create_group
+from app.services.funcioneskeycloak.get_realm_role import get_realm_role
 
 async def crear_grupo(
     nombre: str,

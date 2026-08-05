@@ -1,27 +1,12 @@
 import httpx
-from app.services.keycloak_admin import (
-    get_admin_base_url,
-    get_admin_token,
-    get_group_roles
-)
 
+from app.services.funcioneskeycloak.get_admin_base_url import get_admin_base_url
+from app.services.funcioneskeycloak.get_admin_token import get_admin_token
+from app.services.funcioneskeycloak.get_group_roles import get_group_roles
 
 async def obtener_detalles_grupo(nombre_grupo: str):
     """
-    Obtiene los detalles de un grupo incluyendo:
-    - nombre del grupo
-    - permisos asignados (roles que comienzan con PERMISO_)
-    - módulos asignados (roles que comienzan con MODULO_)
-    - submódulos asignados (roles que comienzan con SUBMODULO_)
-    
-    Args:
-        nombre_grupo: Nombre del grupo (ej: GRUPO_ADMINISTRADOR)
-    
-    Returns:
-        dict con estructura {nombre, permisos, modulos, submodulos}
-    
-    Raises:
-        Exception: Si el grupo no existe o hay error al obtener datos
+    Obtiene los detalles de un grupo.
     """
     
     try:

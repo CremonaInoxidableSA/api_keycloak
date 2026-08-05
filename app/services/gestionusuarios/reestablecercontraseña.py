@@ -1,9 +1,7 @@
 import httpx
 
-from app.services.keycloak_admin import (
-    get_admin_base_url,
-    get_admin_token
-)
+from app.services.funcioneskeycloak.get_admin_base_url import get_admin_base_url
+from app.services.funcioneskeycloak.get_admin_token import get_admin_token
 
 async def reset_user_password(
     user_id: str,

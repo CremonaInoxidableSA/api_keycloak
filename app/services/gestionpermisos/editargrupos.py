@@ -1,13 +1,11 @@
 from typing import Optional, List
-from app.services.keycloak_admin import (
-    get_realm_role,
-    get_group,
-    get_group_roles,
-    assign_realm_roles_to_group,
-    remove_realm_roles_from_group,
-    update_group_name
-)
 
+from app.services.funcioneskeycloak.assign_realm_roles_to_group import assign_realm_roles_to_group
+from app.services.funcioneskeycloak.get_group_roles import get_group_roles
+from app.services.funcioneskeycloak.get_group import get_group
+from app.services.funcioneskeycloak.get_realm_role import get_realm_role
+from app.services.funcioneskeycloak.remove_realm_roles_from_group import remove_realm_roles_from_group
+from app.services.funcioneskeycloak.update_group_name import update_group_name
 
 async def editar_grupo(
     nombre: str,

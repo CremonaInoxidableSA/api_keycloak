@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, Depends
 
 from app.schemas.user import CreateUserRequest
 
-from app.services.keycloak_admin import get_user
+from app.services.funcioneskeycloak.get_user import get_user
 
 from app.services.gestionusuarios.crearusuario import crear_usuario
 
