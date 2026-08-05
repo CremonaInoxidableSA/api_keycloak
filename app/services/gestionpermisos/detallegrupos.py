@@ -48,11 +48,11 @@ async def obtener_detalles_grupo(nombre_grupo: str):
         
         for rol in roles:
             if rol.startswith("PERMISO_"):
-                permisos.append(rol)
+                permisos.append({"nombre": rol})
             elif rol.startswith("MODULO_"):
-                modulos.append(rol)
+                modulos.append({"nombre": rol})
             elif rol.startswith("SUBMODULO_"):
-                submodulos.append(rol)
+                submodulos.append({"nombre": rol})
         
         return {
             "nombre": nombre_grupo,
