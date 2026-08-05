@@ -16,7 +16,7 @@ router = APIRouter(
     dependencies=[Depends(require_role("PERMISO_CONSULTAR_PERMISOS"))]
 )
 async def get_detalles_permiso(
-    nombre: str = Query(..., description="Nombre del permiso a consultar:"),
+    nombre_permiso: str = Query(..., description="Nombre del permiso a consultar:"),
     current_user: AuthenticatedUser = Depends(get_current_user)
 ):
     """
@@ -24,7 +24,7 @@ async def get_detalles_permiso(
     """
     
     try:
-        detalles = await obtener_detalles_permiso(nombre)
+        detalles = await obtener_detalles_permiso(nombre_permiso)
         return detalles
     
     except Exception as e:
