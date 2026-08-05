@@ -17,7 +17,7 @@ router = APIRouter(
     dependencies=[Depends(require_role("PERMISO_EDITAR_GRUPOS"))]
 )
 async def editar_grupo_endpoint(
-    nombre: str,
+    grupo_nombre: str,
     data: EditGroupRequest = None,
     current_user: AuthenticatedUser = Depends(get_current_user)
 ):
@@ -25,7 +25,7 @@ async def editar_grupo_endpoint(
     Edita un grupo en Keycloak.
     
     Query Parameters:
-        - nombre: Nombre actual del grupo a editar
+        - grupo_nombre: Nombre actual del grupo a editar
     
     Body:
         - permisos: Lista de permisos a asignar (opcional)
@@ -38,7 +38,7 @@ async def editar_grupo_endpoint(
     
     try:
         resultado = await editar_grupo(
-            nombre=nombre,
+            nombre=grupo_nombre,
             permisos=data.permisos,
             modulos=data.modulos,
             submodulos=data.submodulos

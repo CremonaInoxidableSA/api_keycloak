@@ -14,14 +14,14 @@ router = APIRouter(
 
 @router.put("/habilitar")
 async def put_habilitar_modulo(
-    nombre: str = Query(..., description="Nombre del módulo a habilitar"),
+    modulo_nombre: str = Query(..., description="Nombre del módulo a habilitar"),
     usuario: AuthenticatedUser = Depends(require_role("PERMISO_EDITAR_MODULO"))
 ):
     """
     Habilita un módulo.
     """
     try:
-        resultado = habilitar_modulo(nombre)
+        resultado = habilitar_modulo(modulo_nombre)
         return resultado
     except Exception as e:
         raise HTTPException(
@@ -32,14 +32,14 @@ async def put_habilitar_modulo(
 
 @router.put("/deshabilitar")
 async def put_deshabilitar_modulo(
-    nombre: str = Query(..., description="Nombre del módulo a deshabilitar"),
+    modulo_nombre: str = Query(..., description="Nombre del módulo a deshabilitar"),
     usuario: AuthenticatedUser = Depends(require_role("PERMISO_EDITAR_MODULO"))
 ):
     """
     Deshabilita un módulo.
     """
     try:
-        resultado = deshabilitar_modulo(nombre)
+        resultado = deshabilitar_modulo(modulo_nombre)
         return resultado
     except Exception as e:
         raise HTTPException(

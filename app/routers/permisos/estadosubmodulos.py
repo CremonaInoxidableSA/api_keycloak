@@ -14,14 +14,14 @@ router = APIRouter(
 
 @router.put("/habilitar")
 async def put_habilitar_submodulo(
-    nombre: str = Query(..., description="Nombre del submódulo a habilitar"),
+    submodulo_nombre: str = Query(..., description="Nombre del submódulo a habilitar"),
     usuario: AuthenticatedUser = Depends(require_role("PERMISO_EDITAR_SUBMODULO"))
 ):
     """
     Habilita un submódulo.
     """
     try:
-        resultado = habilitar_submodulo(nombre)
+        resultado = habilitar_submodulo(submodulo_nombre)
         return resultado
     except Exception as e:
         raise HTTPException(
@@ -32,14 +32,14 @@ async def put_habilitar_submodulo(
 
 @router.put("/deshabilitar")
 async def put_deshabilitar_submodulo(
-    nombre: str = Query(..., description="Nombre del submódulo a deshabilitar"),
+    submodulo_nombre: str = Query(..., description="Nombre del submódulo a deshabilitar"),
     usuario: AuthenticatedUser = Depends(require_role("PERMISO_EDITAR_SUBMODULO"))
 ):
     """
     Deshabilita un submódulo.
     """
     try:
-        resultado = deshabilitar_submodulo(nombre)
+        resultado = deshabilitar_submodulo(submodulo_nombre)
         return resultado
     except Exception as e:
         raise HTTPException(
