@@ -338,7 +338,7 @@ async def get_group(group_name: str):
         if group["name"] == group_name:
             return group
     
-    raise Exception(f"El grupo '{group_name}' no existe en Keycloak")
+    raise Exception(f"El grupo '{group_name}' no existe.")
 
 
 async def assign_realm_roles_to_group(
@@ -503,7 +503,6 @@ async def update_group_name(group_id: str, new_name: str):
         
         response.raise_for_status()
     
-    # Obtener el grupo actualizado
     group_url = (
         f"{get_admin_base_url()}"
         f"/groups/{group_id}"

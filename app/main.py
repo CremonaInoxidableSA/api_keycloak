@@ -33,6 +33,10 @@ from app.routers.permisos import creargrupos
 from app.routers.permisos import editargrupos
 from app.routers.permisos import estadomodulos
 from app.routers.permisos import estadosubmodulos
+from app.routers.permisos import detallegrupos
+from app.routers.permisos import detallemodulos
+from app.routers.permisos import detallesubmodulos
+from app.routers.permisos import detallepermisos
 
 
 #Cosas MYSQL
@@ -66,26 +70,34 @@ app = FastAPI(
 )
 
 app.include_router(detalles.router)
+app.include_router(gestionpersonal.router)
+
+
 app.include_router(usuarios.router)
 app.include_router(estadousuarios.router)
+app.include_router(editarusuario.router)
 app.include_router(reestablecercontraseña.router)
-app.include_router(gestionpersonal.router)
 app.include_router(listausuarios.router)
 app.include_router(detalleusuario.router)
-app.include_router(editarusuario.router)
+
+
 app.include_router(modulospersonales.router)
 app.include_router(submodulospersonales.router)
 app.include_router(listagrupos.router)
 app.include_router(listamodulos.router)
 app.include_router(listasubmodulos.router)
 app.include_router(listapermisos.router)
+app.include_router(detallegrupos.router)
+app.include_router(detallemodulos.router)
+app.include_router(detallesubmodulos.router)
+app.include_router(detallepermisos.router)
 app.include_router(crearmodulos.router)
 app.include_router(crearsubmodulos.router)
 app.include_router(crearpermiso.router)
+app.include_router(creargrupos.router)
 app.include_router(editarmodulos.router)
 app.include_router(editarsubmodulos.router)
 app.include_router(editarpermisos.router)
-app.include_router(creargrupos.router)
 app.include_router(editargrupos.router)
 app.include_router(estadomodulos.router)
 app.include_router(estadosubmodulos.router)

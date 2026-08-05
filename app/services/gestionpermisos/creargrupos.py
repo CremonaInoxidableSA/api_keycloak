@@ -24,7 +24,7 @@ async def crear_grupo(
                 rol = await get_realm_role(permiso)
                 roles_a_asignar.append(permiso)
             except Exception:
-                raise Exception(f"El permiso '{permiso}' no existe en Keycloak")
+                raise Exception(f"El permiso '{permiso}' no existe.")
     
     if modulos:
         for modulo in modulos:
@@ -32,7 +32,7 @@ async def crear_grupo(
                 rol = await get_realm_role(modulo)
                 roles_a_asignar.append(modulo)
             except Exception:
-                raise Exception(f"El módulo '{modulo}' no existe en Keycloak")
+                raise Exception(f"El módulo '{modulo}' no existe.")
     
     if submodulos:
         for submodulo in submodulos:
@@ -40,7 +40,7 @@ async def crear_grupo(
                 rol = await get_realm_role(submodulo)
                 roles_a_asignar.append(submodulo)
             except Exception:
-                raise Exception(f"El submódulo '{submodulo}' no existe en Keycloak")
+                raise Exception(f"El submódulo '{submodulo}' no existe.")
     
     try:
         grupo = await create_group(nombre)

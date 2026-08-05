@@ -45,7 +45,7 @@ async def obtener_grupos_usuario(user_id: str, token: str):
         return []
 
 @router.put(
-    "/habilitar-usuarios",
+    "/habilitar",
     dependencies=[Depends(require_role("PERMISO_HABILITAR_USUARIOS"))]
 )
 async def enable_user(
@@ -83,7 +83,7 @@ async def enable_user(
 
 
 @router.put(
-    "/deshabilitar-usuarios",
+    "/deshabilitar",
     dependencies=[Depends(require_role("PERMISO_DESHABILITAR_USUARIOS"))]
 )
 async def disable_user(

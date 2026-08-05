@@ -17,7 +17,7 @@ async def editar_permiso(
         permiso = await get_realm_role(permiso_nombre)
         
         if not permiso:
-            raise Exception(f"El permiso '{permiso_nombre}' no existe en Keycloak")
+            raise Exception(f"El permiso '{permiso_nombre}' no existe.")
         
         if nuevo_nombre is None and descripcion is None:
             raise Exception("Debe proporcionar al menos un valor a actualizar")
