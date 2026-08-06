@@ -8,7 +8,7 @@ from app.models.submodulos import Submodulos
 from app.models.modulos import Modulos
 
 
-async def eliminar_modulo(nombre_modulo: str):
+async def eliminar_modulo(modulo_nombre: str):
     """
     Elimina un módulo de Keycloak y BD.
     Previamente elimina todos los submódulos asociados.
@@ -24,15 +24,15 @@ async def eliminar_modulo(nombre_modulo: str):
         db = SessionLocal()
         
         modulo = db.query(Modulos).filter(
-            Modulos.nombre == nombre_modulo
+            Modulos.nombre == modulo_nombre
         ).first()
         
         if not modulo:
             db.close()
-            raise Exception(f"El módulo '{nombre_modulo}' no existe en la base de datos")
+            raise Exception(f"El módulo '{modulo_nombre}' no existe en la base de datos")
         
         submodulos = db.query(Submodulos).filter(
-            Submodulos.modulo_padre == nombre_modulo
+            Submodulos.modulo_padre == modulo_nombre
         ).all()
         
         for submodulo in submodulos:
@@ -55,10 +55,10 @@ async def eliminar_modulo(nombre_modulo: str):
                     pass
         
         db.query(Submodulos).filter(
-            Submodulos.modulo_padre == nombre_modulo
+            Submodulos.modulo_padre == modulo_nombre
         ).delete()
         
-        modulo_role_url = f"{get_admin_base_url()}/roles/{nombre_modulo}"
+        modulo_role_url = f"{get_admin_base_url()}/roles/{modulo_nombre}"
         
         async with httpx.AsyncClient() as client:
             try:
@@ -77,14 +77,14 @@ async def eliminar_modulo(nombre_modulo: str):
                 pass
         
         db.query(Modulos).filter(
-            Modulos.nombre == nombre_modulo
+            Modulos.nombre == modulo_nombre
         ).delete()
         
         db.commit()
         db.close()
         
         return {
-            "detail": f"Módulo '{nombre_modulo}' y sus {len(submodulos)} submódulos eliminados exitosamente"
+            "detail": f"Módulo '{modulo_nombre}' y sus {len(submodulos)} submódulos eliminados exitosamente"
         }
     
     except Exception as e:

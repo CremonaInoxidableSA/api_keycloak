@@ -15,4 +15,4 @@ class UpdateUserRequest(BaseModel):
     
     grupos: Optional[List[str]] = None
         
-    cambiar_contraseña: Optional[bool] = None
+    cambiar_password: Optional[bool] = None

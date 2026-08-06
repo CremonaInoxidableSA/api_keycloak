@@ -3,7 +3,7 @@ from app.config.db import SessionLocal
 from app.models.submodulos import Submodulos
 
 
-async def obtener_detalles_submodulo(nombre_submodulo: str):
+async def obtener_detalles_submodulo(submodulo_nombre: str):
     """
     Obtiene los detalles de un submódulo incluyendo:
     """
@@ -13,13 +13,13 @@ async def obtener_detalles_submodulo(nombre_submodulo: str):
         
         # Buscar el submódulo en la base de datos
         submodulo = db.query(Submodulos).filter(
-            Submodulos.nombre == nombre_submodulo
+            Submodulos.nombre == submodulo_nombre
         ).first()
         
         db.close()
         
         if not submodulo:
-            raise Exception(f"El submódulo '{nombre_submodulo}' no existe en la base de datos")
+            raise Exception(f"El submódulo '{submodulo_nombre}' no existe en la base de datos")
         
         return {
             "nombre": submodulo.nombre,

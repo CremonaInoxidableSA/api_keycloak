@@ -45,7 +45,7 @@ async def editar_usuario(
             legajo=data.legajo,
             dni=data.dni,
             grupos=data.grupos,
-            cambiar_contraseña=data.cambiar_contraseña
+            cambiar_password=data.cambiar_password
         )
         
         return resultado

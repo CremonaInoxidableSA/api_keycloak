@@ -52,7 +52,7 @@ async def listar_permisos(
             "data": permisos,
             "paginacion": {
                 "total_paginas": total_paginas,
-                "total_permisos": total
+                "total_registros": total
             }
         }
     

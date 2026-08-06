@@ -16,7 +16,7 @@ async def editar_usuario(
     legajo: Optional[int] = None,
     dni: Optional[int] = None,
     grupos: Optional[List[str]] = None,
-    cambiar_contraseña: Optional[bool] = None
+    cambiar_password: Optional[bool] = None
 ):
     
     token = await get_admin_token()
@@ -45,7 +45,7 @@ async def editar_usuario(
             )
             response.raise_for_status()
     
-    if cambiar_contraseña is not None:
+    if cambiar_password is not None:
         required_actions_url = f"{get_admin_base_url()}/users/{user_id}"
         
         async with httpx.AsyncClient() as client:
@@ -58,9 +58,9 @@ async def editar_usuario(
             
             required_actions = user_data.get("requiredActions", [])
             
-            if cambiar_contraseña and "UPDATE_PASSWORD" not in required_actions:
+            if cambiar_password and "UPDATE_PASSWORD" not in required_actions:
                 required_actions.append("UPDATE_PASSWORD")
-            elif not cambiar_contraseña and "UPDATE_PASSWORD" in required_actions:
+            elif not cambiar_password and "UPDATE_PASSWORD" in required_actions:
                 required_actions.remove("UPDATE_PASSWORD")
             
             update_body = {"requiredActions": required_actions}

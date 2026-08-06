@@ -56,15 +56,15 @@ async def obtener_submodulos_usuario(roles: list[str], modulo_padre: str):
         )
         
         resultado = {}
-        for nombre_submodulo in submodulos_usuario:
-            if nombre_submodulo in submodulos_db:
-                db_data = submodulos_db[nombre_submodulo]
-                resultado[nombre_submodulo] = {
+        for submodulo_nombre in submodulos_usuario:
+            if submodulo_nombre in submodulos_db:
+                db_data = submodulos_db[submodulo_nombre]
+                resultado[submodulo_nombre] = {
                     "url": f"{db_data['subdominio']}.intranetcreminox.com/{db_data['path']}",
                     "icono": db_data["icono"]
                 }
             else:
-                resultado[nombre_submodulo] = {
+                resultado[submodulo_nombre] = {
                     "url": "",
                     "icono": ""
                 }

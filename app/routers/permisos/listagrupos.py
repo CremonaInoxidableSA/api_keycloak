@@ -52,7 +52,7 @@ async def listar_grupos(
             "data": grupos,
             "paginacion": {
                 "total_paginas": total_paginas,
-                "total_grupos": total
+                "total_registros": total
             }
         }
     

@@ -4,7 +4,7 @@ from app.services.funcioneskeycloak.get_admin_base_url import get_admin_base_url
 from app.services.funcioneskeycloak.get_admin_token import get_admin_token
 from app.services.funcioneskeycloak.get_group_roles import get_group_roles
 
-async def obtener_detalles_grupo(nombre_grupo: str):
+async def obtener_detalles_grupo(grupo_nombre: str):
     """
     Obtiene los detalles de un grupo.
     """
@@ -16,7 +16,6 @@ async def obtener_detalles_grupo(nombre_grupo: str):
             "Authorization": f"Bearer {token}"
         }
         
-        # Obtener el grupo por nombre
         grupos_url = f"{get_admin_base_url()}/groups"
         
         async with httpx.AsyncClient() as client:
@@ -31,12 +30,12 @@ async def obtener_detalles_grupo(nombre_grupo: str):
         
         grupo_encontrado = None
         for grupo in grupos_data:
-            if grupo["name"] == nombre_grupo:
+            if grupo["name"] == grupo_nombre:
                 grupo_encontrado = grupo
                 break
         
         if not grupo_encontrado:
-            raise Exception(f"El grupo '{nombre_grupo}' no existe.")
+            raise Exception(f"El grupo '{grupo_nombre}' no existe.")
         
         grupo_id = grupo_encontrado["id"]
         
@@ -55,7 +54,7 @@ async def obtener_detalles_grupo(nombre_grupo: str):
                 submodulos.append({"nombre": rol})
         
         return {
-            "nombre": nombre_grupo,
+            "nombre": grupo_nombre,
             "permisos": permisos,
             "modulos": modulos,
             "submodulos": submodulos

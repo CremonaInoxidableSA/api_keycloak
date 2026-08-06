@@ -15,7 +15,7 @@ router = APIRouter(
     dependencies=[Depends(require_role("PERMISO_CONSULTAR_SUBMODULOS"))]
 )
 async def get_detalles_submodulo(
-    nombre_submodulo: str = Query(..., description="Nombre del submódulo a consultar:"),
+    submodulo_nombre: str = Query(..., description="Nombre del submódulo a consultar:"),
     current_user: AuthenticatedUser = Depends(get_current_user)
 ):
     """
@@ -23,7 +23,7 @@ async def get_detalles_submodulo(
     """
     
     try:
-        detalles = await obtener_detalles_submodulo(nombre_submodulo)
+        detalles = await obtener_detalles_submodulo(submodulo_nombre)
         return detalles
     
     except Exception as e:

@@ -67,15 +67,15 @@ async def editar_grupo(
     if nombre is not None:
         try:
             grupo_actualizado = await update_group_name(grupo_id, nombre)
-            nombre_grupo = grupo_actualizado.get("name", nombre)
+            grupo_nombre = grupo_actualizado.get("name", nombre)
         except Exception as e:
             raise Exception(f"Error al actualizar nombre del grupo: {str(e)}")
     else:
-        nombre_grupo = nombre
+        grupo_nombre = nombre
     
     return {
         "id": grupo_id,
-        "nombre": nombre_grupo,
+        "nombre": grupo_nombre,
         "roles_asignados": roles_a_asignar if (permisos or modulos or submodulos) else roles_actuales,
         "detail": "Grupo actualizado exitosamente"
     }

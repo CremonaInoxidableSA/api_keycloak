@@ -8,31 +8,24 @@ from app.services.funcioneskeycloak.get_user import get_user
 from app.config.db import SessionLocal
 from app.models.usuarios import Usuarios
 
-async def obtener_grupos_usuario(user_id: str, token: str):
+async def obtener_grupos_usuario(client: httpx.AsyncClient, user_id: str, headers: dict):
     """
     Obtiene los grupos de un usuario específico.
     """
+    grupos_url = f"{get_admin_base_url()}/users/{user_id}/groups"
+    
     try:
-        headers = {
-            "Authorization": f"Bearer {token}"
-        }
-        
-        grupos_url = f"{get_admin_base_url()}/users/{user_id}/groups"
-        
-        async with httpx.AsyncClient() as client:
-            grupos_response = await client.get(
-                grupos_url,
-                headers=headers
-            )
-            
-            grupos_response.raise_for_status()
+        response = await client.get(
+            grupos_url,
+            headers=headers
+        )
+        response.raise_for_status()
         
         grupos = [
-            grupo["name"]
-            for grupo in grupos_response.json()
+            {"nombre": grupo.get("name")}
+            for grupo in response.json()
         ]
         return grupos
-    
     except Exception:
         return []
 
@@ -82,12 +75,12 @@ async def procesar_detalles_usuario_por_id(user_id: str):
             permisos.append(rol)
     
     required_actions = usuario_keycloak.get("requiredActions", [])
-    cambiar_contraseña = "UPDATE_PASSWORD" in required_actions
+    cambiar_password = "UPDATE_PASSWORD" in required_actions
     
     token = await get_admin_token()
     
     grupos, (legajo, dni) = await asyncio.gather(
-        obtener_grupos_usuario(user_id, token),
+        obtener_grupos_usuario(httpx.AsyncClient(), user_id, {"Authorization": f"Bearer {token}"}),
         asyncio.to_thread(obtener_datos_db, user_id)
     )
     
@@ -100,5 +93,5 @@ async def procesar_detalles_usuario_por_id(user_id: str):
         "email": usuario_keycloak.get("email", ""),
         "grupos": grupos,
         "habilitado": usuario_keycloak.get("enabled", False),
-        "cambiar_contraseña": cambiar_contraseña
+        "cambiar_password": cambiar_password
     }

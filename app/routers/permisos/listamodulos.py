@@ -52,7 +52,7 @@ async def listar_modulos(
             "data": modulos,
             "paginacion": {
                 "total_paginas": total_paginas,
-                "total_modulos": total
+                "total_registros": total
             }
         }
     

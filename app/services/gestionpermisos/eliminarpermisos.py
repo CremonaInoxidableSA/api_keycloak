@@ -3,7 +3,7 @@ import httpx
 from app.services.funcioneskeycloak.get_admin_base_url import get_admin_base_url
 from app.services.funcioneskeycloak.get_admin_token import get_admin_token
 
-async def eliminar_permiso(nombre_permiso: str):
+async def eliminar_permiso(permiso_nombre: str):
     """
     Elimina un permiso de Keycloak.
     """
@@ -16,7 +16,7 @@ async def eliminar_permiso(nombre_permiso: str):
         }
         
         # Obtener el rol (permiso) de Keycloak
-        permiso_url = f"{get_admin_base_url()}/roles/{nombre_permiso}"
+        permiso_url = f"{get_admin_base_url()}/roles/{permiso_nombre}"
         
         async with httpx.AsyncClient() as client:
             response = await client.get(
@@ -34,10 +34,10 @@ async def eliminar_permiso(nombre_permiso: str):
             
             delete_response.raise_for_status()
         
-        return {"detail": f"Permiso '{nombre_permiso}' eliminado exitosamente"}
+        return {"detail": f"Permiso '{permiso_nombre}' eliminado exitosamente"}
     
     except Exception as e:
         error_str = str(e)
         if "404" in error_str or "not found" in error_str.lower():
-            raise Exception(f"El permiso '{nombre_permiso}' no existe.")
+            raise Exception(f"El permiso '{permiso_nombre}' no existe.")
         raise Exception(f"Error al eliminar permiso: {error_str}")

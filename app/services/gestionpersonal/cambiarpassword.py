@@ -3,7 +3,7 @@ import httpx
 from app.services.funcioneskeycloak.get_admin_base_url import get_admin_base_url
 from app.services.funcioneskeycloak.get_admin_token import get_admin_token
 
-async def cambiar_contraseña_usuario(
+async def cambiar_password_usuario(
     user_id: str,
     new_password: str
 ):

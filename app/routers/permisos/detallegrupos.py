@@ -16,7 +16,7 @@ router = APIRouter(
     dependencies=[Depends(require_role("PERMISO_CONSULTAR_GRUPOS"))]
 )
 async def get_detalles_grupo(
-    nombre_grupo: str = Query(..., description="Nombre del grupo a consultar:"),
+    grupo_nombre: str = Query(..., description="Nombre del grupo a consultar:"),
     current_user: AuthenticatedUser = Depends(get_current_user)
 ):
     """
@@ -24,7 +24,7 @@ async def get_detalles_grupo(
     """
     
     try:
-        detalles = await obtener_detalles_grupo(nombre_grupo)
+        detalles = await obtener_detalles_grupo(grupo_nombre)
         return detalles
     
     except Exception as e:

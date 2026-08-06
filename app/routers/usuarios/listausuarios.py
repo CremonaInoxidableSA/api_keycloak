@@ -22,12 +22,6 @@ async def listar_usuarios(
 ):
     """
     Obtiene la lista de usuarios del sistema con paginación y filtro.
-    
-    Retorna máximo 10 usuarios por página.
-    
-    Query Parameters:
-        - numero_pagina: Número de página (default: 1)
-        - filtro: String para filtrar usuarios por email, nombre o apellido (opcional)
     """
     
     try:
@@ -52,7 +46,7 @@ async def listar_usuarios(
             "data": usuarios,
             "paginacion": {
                 "total_paginas": total_paginas,
-                "total_usuarios": total
+                "total_registros": total
             }
         }
     

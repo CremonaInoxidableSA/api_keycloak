@@ -7,7 +7,7 @@ from app.config.db import SessionLocal
 from app.models.submodulos import Submodulos
 
 
-async def eliminar_submodulo(nombre_submodulo: str):
+async def eliminar_submodulo(submodulo_nombre: str):
     """
     Elimina un submódulo de Keycloak y BD.
     """
@@ -22,14 +22,14 @@ async def eliminar_submodulo(nombre_submodulo: str):
         db = SessionLocal()
         
         submodulo = db.query(Submodulos).filter(
-            Submodulos.nombre == nombre_submodulo
+            Submodulos.nombre == submodulo_nombre
         ).first()
         
         if not submodulo:
             db.close()
-            raise Exception(f"El submódulo '{nombre_submodulo}' no existe en la base de datos")
+            raise Exception(f"El submódulo '{submodulo_nombre}' no existe en la base de datos")
         
-        submodulo_role_url = f"{get_admin_base_url()}/roles/{nombre_submodulo}"
+        submodulo_role_url = f"{get_admin_base_url()}/roles/{submodulo_nombre}"
         
         async with httpx.AsyncClient() as client:
             try:
@@ -48,15 +48,15 @@ async def eliminar_submodulo(nombre_submodulo: str):
                 pass
         
         db.query(Submodulos).filter(
-            Submodulos.nombre == nombre_submodulo
+            Submodulos.nombre == submodulo_nombre
         ).delete()
         
         db.commit()
         db.close()
         
-        return {"detail": f"Submódulo '{nombre_submodulo}' eliminado exitosamente"}
+        return {"detail": f"Submódulo '{submodulo_nombre}' eliminado exitosamente"}
     
     except Exception as e:
         db.rollback()
         db.close()
-        raise Exception(f"Error al eliminar submódulo: {str(e)}")
+        raise Exception(f"Error al eliminar submódulo '{submodulo_nombre}': {str(e)}")

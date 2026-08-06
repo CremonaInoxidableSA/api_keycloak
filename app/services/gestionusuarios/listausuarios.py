@@ -18,7 +18,7 @@ async def obtener_grupos_usuario(client: httpx.AsyncClient, user_id: str, header
         response.raise_for_status()
         
         grupos = [
-            grupo["name"]
+            {"nombre": grupo.get("name")}
             for grupo in response.json()
         ]
         return grupos
@@ -28,16 +28,6 @@ async def obtener_grupos_usuario(client: httpx.AsyncClient, user_id: str, header
 async def obtener_lista_usuarios(numero_pagina: int = 1, filtro: str = None):
     """
     Obtiene la lista de usuarios de Keycloak con paginación y filtro.
-    
-    Args:
-        numero_pagina: Número de página (empezando desde 1)
-        filtro: String para filtrar usuarios por email, nombre o apellido
-    
-    Returns:
-        Tupla con (lista de usuarios, total de usuarios que coinciden)
-    
-    Raises:
-        Exception: Si hay error al conectar con Keycloak
     """
     
     if numero_pagina < 1:
