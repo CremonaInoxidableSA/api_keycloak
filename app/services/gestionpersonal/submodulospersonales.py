@@ -14,7 +14,8 @@ def obtener_datos_submodulos_db(nombres_submodulos: list[str], modulo_padre: str
         
         submodulos = db.query(Submodulos).filter(
             Submodulos.nombre.in_(nombres_submodulos),
-            Submodulos.modulo_padre == modulo_padre
+            Submodulos.modulo_padre == modulo_padre,
+            Submodulos.habilitado == 1
         ).all()
         
         modulo_padre_data = db.query(Modulos).filter(
@@ -62,11 +63,6 @@ async def obtener_submodulos_usuario(roles: list[str], modulo_padre: str):
                 resultado[submodulo_nombre] = {
                     "url": f"{db_data['subdominio']}.intranetcreminox.com/{db_data['path']}",
                     "icono": db_data["icono"]
-                }
-            else:
-                resultado[submodulo_nombre] = {
-                    "url": "",
-                    "icono": ""
                 }
         
         return resultado

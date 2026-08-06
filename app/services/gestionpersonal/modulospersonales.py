@@ -10,7 +10,8 @@ def obtener_datos_modulos_db(nombres_modulos: list[str]):
     try:
         db = SessionLocal()
         modulos = db.query(Modulos).filter(
-            Modulos.nombre.in_(nombres_modulos)
+            Modulos.nombre.in_(nombres_modulos),
+            Modulos.habilitado == 1
         ).all()
         db.close()
         
@@ -51,11 +52,6 @@ async def obtener_modulos_usuario(roles: list[str]):
                 resultado[modulo_nombre] = {
                     "url": f"{db_data['subdominio']}.intranetcreminox.com/{db_data['path']}",
                     "icono": db_data["icono"]
-                }
-            else:
-                resultado[modulo_nombre] = {
-                    "url": "",
-                    "icono": ""
                 }
         
         return resultado
