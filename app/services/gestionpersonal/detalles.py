@@ -13,7 +13,7 @@ async def procesar_detalles(user: AuthenticatedUser):
     permisos = []
     
     for rol in roles:
-        elif rol.startswith("PERMISO_"):
+        if rol.startswith("PERMISO_"):
             permisos.append({"nombre": rol})
     
     grupos = []
