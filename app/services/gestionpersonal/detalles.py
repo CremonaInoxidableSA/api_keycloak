@@ -10,15 +10,9 @@ from app.models.usuarios import Usuarios
 async def procesar_detalles(user: AuthenticatedUser): 
     roles = user.roles if user.roles else []
     
-    modulos = []
-    submodulos = []
     permisos = []
     
     for rol in roles:
-        if rol.startswith("MODULO_"):
-            modulos.append({"nombre": rol})
-        elif rol.startswith("SUBMODULO_"):
-            submodulos.append({"nombre": rol})
         elif rol.startswith("PERMISO_"):
             permisos.append({"nombre": rol})
     
@@ -74,7 +68,5 @@ async def procesar_detalles(user: AuthenticatedUser):
         "legajo": legajo,
         "dni": dni,
         "grupos": grupos,
-        "modulos": modulos,
-        "submodulos": submodulos,
         "permisos": permisos
     }
