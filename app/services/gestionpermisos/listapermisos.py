@@ -47,7 +47,8 @@ async def obtener_permisos_realm(numero_pagina: int = 1, filtro: str = None):
                     continue
             
             permiso_procesado = {
-                "nombre": rol.get("name")
+                "nombre": rol.get("name"),
+                "descripcion": rol.get("description", "")
             }
             
             permisos_procesados.append(permiso_procesado)
