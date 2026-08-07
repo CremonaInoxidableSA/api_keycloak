@@ -50,7 +50,7 @@ async def obtener_modulos_usuario(roles: list[str]):
             if modulo_nombre in modulos_db:
                 db_data = modulos_db[modulo_nombre]
                 resultado[modulo_nombre] = {
-                    "url": f"{db_data['subdominio']}.intranetcreminox.com/{db_data['path']}",
+                    "path": f"{db_data['subdominio']}.intranetcreminox.com/{db_data['path']}",
                     "icono": db_data["icono"]
                 }
         
